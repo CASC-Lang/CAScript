@@ -1,0 +1,4 @@
+C:\Users\User\AppData\Local\JetBrains\Toolbox\apps\CLion\ch-0\212.4746.93\bin\cmake\win\bin\cmake.exe -DCMAKE_BUILD_TYPE=Debug -DCMAKE_DEPENDS_USE_COMPILER=FALSE -G "CodeBlocks - MinGW Makefiles" C:\Users\User\Desktop\github\collage_cpp
+-- Configuring done
+-- Generating done
+-- Build files have been written to: C:/Users/User/Desktop/github/collage_cpp/cmake-build-debug
