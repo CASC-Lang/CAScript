@@ -2,15 +2,16 @@
 // Created by ChAoS-UnItY on 8/10/2021.
 //
 
+#ifndef COLLAGE_CPP_TOKEN_H
+#define COLLAGE_CPP_TOKEN_H
+
 #include <utility>
 #include <iterator>
+#include <iostream>
 
 #include <magic_enum.hpp>
 
 #include "TokenType.h"
-
-#ifndef COLLAGE_CPP_TOKEN_H
-#define COLLAGE_CPP_TOKEN_H
 
 namespace collage::syntax {
     struct Token {
