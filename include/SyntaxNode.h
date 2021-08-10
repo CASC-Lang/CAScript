@@ -10,9 +10,11 @@
 namespace collage::syntax {
     class SyntaxNode {
     public:
-        SyntaxNode();
+        SyntaxNode() = default;
 
-        virtual SyntaxType type();
+        virtual SyntaxType type() const {
+            return SyntaxType::Node;
+        };
     };
 }
 

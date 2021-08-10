@@ -6,6 +6,9 @@
 
 #ifdef _WIN32
 #include <Windows.h>
+#include <BinaryExpression.h>
+#include <magic_enum.hpp>
+
 #endif
 
 #include "Lexer.h"
@@ -26,7 +29,16 @@ int main() {
     syntax::Lexer lexer(source_input);
     auto tokens = lexer.lex();
 
-    std::copy(tokens.cbegin(), tokens.cend(), std::ostream_iterator<syntax::Token>(std::cout, ", "));
+    syntax::Parser parser(tokens);
+
+    auto expression = parser.parse();
+
+    std::cout << magic_enum::enum_name(expression->type()) << std::endl;
+
+    if (expression->type() == syntax::SyntaxType::Binary) {
+        auto expr = std::static_pointer_cast<syntax::BinaryExpression>(expression);
+        std::cout << expr.get() << std::endl;
+    }
 
     return 0;
 }

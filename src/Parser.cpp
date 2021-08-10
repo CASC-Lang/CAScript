@@ -2,15 +2,20 @@
 // Created by ChAoS-UnItY on 8/10/2021.
 //
 
-
 #include <Parser.h>
-#include <BinaryExpressionSyntax.h>
-#include <NumberExpressionSyntax.h>
+#include <BinaryExpression.h>
+#include <NumberExpression.h>
+#include <memory>
 
 using namespace collage;
 
 syntax::Token syntax::Parser::peek(size_t offset) {
-    return tokens[offset];
+    auto index = pos + offset;
+    if (index >= tokens.size()) {
+        return tokens[tokens.size() - 1];
+    }
+
+    return tokens[pos + offset];
 }
 
 syntax::Token syntax::Parser::match(syntax::TokenType type) {
@@ -27,24 +32,24 @@ syntax::Token syntax::Parser::next() {
     return current;
 }
 
-syntax::ExpressionSyntax syntax::Parser::parse() {
+std::shared_ptr<syntax::ExpressionSyntax> syntax::Parser::parse() {
     return parseExpression();
 }
 
-syntax::ExpressionSyntax syntax::Parser::parseExpression() {
+std::shared_ptr<syntax::ExpressionSyntax> syntax::Parser::parseExpression() {
     auto left = parsePrimaryExpression();
 
     while (Parser::current().type == TokenType::Plus) {
-        auto operator_token = next();
-        auto right = parseExpression();
-        left = syntax::BinaryExpressionSyntax(left, operator_token, right);
+        const auto &operator_token = next();
+        const auto &right = parseExpression();
+        left = std::make_shared<syntax::BinaryExpression>(BinaryExpression(*left, operator_token, *right));
     }
 
     return left;
 }
 
-syntax::ExpressionSyntax syntax::Parser::parsePrimaryExpression() {
+std::shared_ptr<syntax::ExpressionSyntax> syntax::Parser::parsePrimaryExpression() {
     auto number_token = match(TokenType::Number);
 
-    return NumberExpressionSyntax(number_token);
+    return std::make_shared<syntax::NumberExpression>(NumberExpression(number_token));
 }

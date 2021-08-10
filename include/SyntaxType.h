@@ -7,6 +7,8 @@
 
 namespace collage::syntax {
     enum class SyntaxType {
+        Node,
+        Expr,
         Number,
         Binary,
     };

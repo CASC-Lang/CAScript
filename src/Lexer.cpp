@@ -27,7 +27,7 @@ std::vector<syntax::Token> syntax::Lexer::lex() {
             case '\t':
             case '\n':
             case '\r':
-                tokens.emplace_back(TokenType::WhiteSpace, source[pos++]);
+                pos++;
                 break;
             default:
                 if (std::isdigit(source[pos])) {

@@ -5,7 +5,10 @@
 #ifndef COLLAGE_CPP_PARSER_H
 #define COLLAGE_CPP_PARSER_H
 
+#include <utility>
 #include <vector>
+#include <memory>
+#include <ranges>
 
 #include "Token.h"
 #include "ExpressionSyntax.h"
@@ -28,11 +31,11 @@ namespace collage::syntax {
             return peek(0);
         };
 
-        ExpressionSyntax parse();
+        std::shared_ptr<syntax::ExpressionSyntax> parse();
 
-        ExpressionSyntax parseExpression();
+        std::shared_ptr<syntax::ExpressionSyntax> parseExpression();
 
-        ExpressionSyntax parsePrimaryExpression();
+        std::shared_ptr<syntax::ExpressionSyntax> parsePrimaryExpression();
     };
 }
 

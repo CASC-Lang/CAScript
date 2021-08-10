@@ -10,8 +10,17 @@
 namespace collage::syntax {
     class ExpressionSyntax: public SyntaxNode {
     public:
-        ExpressionSyntax();
+        ExpressionSyntax() = default;
+
+        SyntaxType type() const {
+            return SyntaxType::Expr;
+        }
     };
+
+    inline std::ostream &operator<<(std::ostream &os, const ExpressionSyntax &expression) {
+        os << "<Node>";
+        return os;
+    }
 }
 
 #endif //COLLAGE_CPP_EXPRESSIONSYNTAX_H
