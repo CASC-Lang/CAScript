@@ -43,7 +43,7 @@ syntax::ExpressionSyntax syntax::Parser::parseExpression() {
     return left;
 }
 
-syntax::ExpressionSyntax* syntax::Parser::parsePrimaryExpression() {
+syntax::ExpressionSyntax syntax::Parser::parsePrimaryExpression() {
     auto number_token = match(TokenType::Number);
 
     return NumberExpressionSyntax(number_token);
