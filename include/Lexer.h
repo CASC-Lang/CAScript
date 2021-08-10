@@ -20,34 +20,7 @@ namespace collage::syntax {
     public:
         explicit Lexer(std::string source) : source(std::move(source)) {}
 
-        std::vector<Token> lex() {
-            std::vector<Token> tokens;
-            while (pos < source.length()) {
-                switch (source[pos]) {
-                    case '+':
-                        tokens.emplace_back(TokenType::Plus, source[pos++]);
-                        break;
-                    case ' ':
-                    case '\t':
-                    case '\n':
-                    case '\r':
-                        tokens.emplace_back(TokenType::WhiteSpace, source[pos++]);
-                        break;
-                    default:
-                        if (std::isdigit(source[pos])) {
-                            auto start = pos;
-
-                            while (std::isdigit(source[pos]))
-                                pos++;
-
-                            auto len = pos - start;
-                            auto number_literal = source.substr(start, start + len);
-                            tokens.emplace_back(TokenType::Number, number_literal);
-                        }
-                }
-            }
-            return std::move(tokens);
-        }
+        std::vector<Token> lex();
     };
 }
 
