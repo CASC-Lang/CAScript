@@ -25,7 +25,7 @@ int main() {
     syntax::Lexer lexer(source_input);
     auto tokens = lexer.lex();
 
-    std::copy(tokens.cbegin(), tokens.cend(), std::ostream_iterator<syntax::Token>(std::cout));
+    std::copy(tokens.cbegin(), tokens.cend(), std::ostream_iterator<syntax::Token>(std::cout, ", "));
 
     return 0;
 }

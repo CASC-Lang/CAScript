@@ -15,7 +15,7 @@ namespace collage::syntax {
         Slash
     };
 
-    static unsigned precedence(TokenType token) {
+    constexpr unsigned precedence(TokenType token) {
         switch (token) {
             case TokenType::Plus:
             case TokenType::Minus:
