@@ -42,7 +42,7 @@ std::shared_ptr<syntax::ExpressionSyntax> syntax::Parser::parseExpression() {
     while (Parser::current().type == TokenType::Plus) {
         const auto &operator_token = next();
         const auto &right = parseExpression();
-        left = std::make_shared<syntax::BinaryExpression>(BinaryExpression(*left, operator_token, *right));
+        left = std::make_shared<syntax::BinaryExpression>(BinaryExpression(left, operator_token, right));
     }
 
     return left;

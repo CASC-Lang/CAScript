@@ -9,15 +9,17 @@
 #include "ExpressionSyntax.h"
 
 #include <utility>
+#include <memory>
 
 namespace collage::syntax {
     class BinaryExpression : public ExpressionSyntax {
     public:
-        ExpressionSyntax &left;
+        std::shared_ptr<ExpressionSyntax> left;
         Token operator_token;
-        ExpressionSyntax &right;
+        std::shared_ptr<ExpressionSyntax> right;
 
-        BinaryExpression(syntax::ExpressionSyntax &left, Token operator_token, syntax::ExpressionSyntax &right) :
+        BinaryExpression(std::shared_ptr<ExpressionSyntax> left, Token operator_token,
+                         std::shared_ptr<ExpressionSyntax> right) :
                 left(left), operator_token(std::move(operator_token)), right(right) {}
 
         SyntaxType syntax_type() const final {

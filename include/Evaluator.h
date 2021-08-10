@@ -23,7 +23,7 @@ namespace collage::syntax {
             return evalExpression(root);
         };
 
-        EvaluationCallbackValue evalExpression(ExpressionSyntax& syntax) const;
+        EvaluationCallbackValue evalExpression(ExpressionSyntax &syntax) const;
     };
 }
 
