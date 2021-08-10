@@ -9,6 +9,7 @@
 #endif
 
 #include "Lexer.h"
+#include "Parser.h"
 #include "Token.h"
 
 using namespace collage;
