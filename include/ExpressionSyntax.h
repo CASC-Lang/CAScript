@@ -8,13 +8,11 @@
 #include "SyntaxNode.h"
 
 namespace collage::syntax {
-    class ExpressionSyntax: public SyntaxNode {
+    class ExpressionSyntax : public SyntaxNode {
     public:
         ExpressionSyntax() = default;
 
-        SyntaxType type() const {
-            return SyntaxType::Expr;
-        }
+        SyntaxType syntax_type() const override = 0;
     };
 
     inline std::ostream &operator<<(std::ostream &os, const ExpressionSyntax &expression) {

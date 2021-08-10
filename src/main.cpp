@@ -5,12 +5,13 @@
 #include <iterator>
 
 #ifdef _WIN32
+
 #include <Windows.h>
-#include <BinaryExpression.h>
-#include <magic_enum.hpp>
+#include <Evaluator.h>
 
 #endif
 
+#include "BinaryExpression.h"
 #include "Lexer.h"
 #include "Parser.h"
 #include "Token.h"
@@ -32,13 +33,10 @@ int main() {
     syntax::Parser parser(tokens);
 
     auto expression = parser.parse();
+    syntax::Evaluator evaluator(*expression);
+    auto callback = evaluator.eval();
 
-    std::cout << magic_enum::enum_name(expression->type()) << std::endl;
-
-    if (expression->type() == syntax::SyntaxType::Binary) {
-        auto expr = std::static_pointer_cast<syntax::BinaryExpression>(expression);
-        std::cout << expr.get() << std::endl;
-    }
+    std::cout << callback.i << std::endl;
 
     return 0;
 }

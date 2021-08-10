@@ -16,6 +16,7 @@
 namespace collage::syntax {
     struct Token {
         Token(TokenType type, char literal) : type(type), literal(1, literal) {}
+
         Token(TokenType type, std::string literal) : type(type), literal(std::move(literal)) {}
 
         TokenType type;
@@ -23,7 +24,7 @@ namespace collage::syntax {
     };
 
     inline std::ostream &operator<<(std::ostream &os, const Token &token) {
-        os << "<type:" << magic_enum::enum_name(token.type) << "/literal:" << token.literal << ">";
+        os << "<syntax_type:" << magic_enum::enum_name(token.type) << "/literal:" << token.literal << ">";
         return os;
     }
 }

@@ -12,9 +12,7 @@ namespace collage::syntax {
     public:
         SyntaxNode() = default;
 
-        virtual SyntaxType type() const {
-            return SyntaxType::Node;
-        };
+        virtual SyntaxType syntax_type() const = 0;
     };
 }
 

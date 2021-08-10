@@ -11,13 +11,13 @@
 #include <utility>
 
 namespace collage::syntax {
-    class NumberExpression: public ExpressionSyntax {
+    class NumberExpression : public ExpressionSyntax {
     public:
         Token number_token;
 
-        explicit NumberExpression(Token number_token): ExpressionSyntax(), number_token(std::move(number_token)) {}
+        explicit NumberExpression(Token number_token) : ExpressionSyntax(), number_token(std::move(number_token)) {}
 
-        SyntaxType type() const {
+        SyntaxType syntax_type() const final {
             return SyntaxType::Number;
         }
     };
