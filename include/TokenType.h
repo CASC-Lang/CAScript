@@ -1,12 +1,12 @@
 //
-// Created by User on 8/10/2021.
+// Created by ChAoS-UnItY on 8/10/2021.
 //
 
 #ifndef COLLAGE_CPP_TOKENTYPE_H
 #define COLLAGE_CPP_TOKENTYPE_H
 
 namespace collage::syntax {
-    enum TokenType {
+    enum class TokenType {
         WhiteSpace,
         Number,
         Plus,
@@ -15,13 +15,13 @@ namespace collage::syntax {
         Slash
     };
 
-    static unsigned int precedence(enum TokenType token) {
+    constexpr unsigned precedence(TokenType token) {
         switch (token) {
-            case Plus:
-            case Minus:
+            case TokenType::Plus:
+            case TokenType::Minus:
                 return 1;
-            case Star:
-            case Slash:
+            case TokenType::Star:
+            case TokenType::Slash:
                 return 2;
             default:
                 return 0;

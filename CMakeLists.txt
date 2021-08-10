@@ -4,5 +4,8 @@ project(collage_cpp)
 set(CMAKE_CXX_STANDARD 20)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-add_executable(collage_cpp main.cpp)
-target_include_directories(collage_cpp PUBLIC lib)
+add_subdirectory(thirdparty/magic_enum)
+
+add_executable(collage_cpp src/main.cpp)
+target_include_directories(collage_cpp PUBLIC include)
+target_link_libraries(collage_cpp magic_enum)
