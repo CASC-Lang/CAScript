@@ -17,11 +17,18 @@ namespace collage::syntax {
         Token operator_token;
         std::unique_ptr<ExpressionSyntax> expression;
 
-        UnaryExpression(Token operator_token, std::unique_ptr<ExpressionSyntax> expression) : operator_token(std::move(operator_token)),
-                expression(std::move(expression)) {};
+        UnaryExpression(Token operator_token, std::unique_ptr<ExpressionSyntax> expression) :
+                operator_token(std::move(operator_token)), expression(std::move(expression)) {};
 
         SyntaxType syntax_type() const final {
             return SyntaxType::Unary;
+        }
+
+        std::unique_ptr<SyntaxNode * *> children() final {
+            return std::make_unique<SyntaxNode **>(new SyntaxNode *[]{
+                    &operator_token,
+                    expression.get()
+            });
         }
     };
 }

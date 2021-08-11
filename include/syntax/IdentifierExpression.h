@@ -10,7 +10,7 @@
 #include "Token.h"
 
 namespace collage::syntax {
-    class IdentifierExpression: public ExpressionSyntax {
+    class IdentifierExpression : public ExpressionSyntax {
     public:
         Token identifier_token;
 
@@ -18,6 +18,12 @@ namespace collage::syntax {
 
         SyntaxType syntax_type() const override {
             return SyntaxType::Id;
+        }
+
+        std::unique_ptr<SyntaxNode * *> children() final {
+            return std::make_unique<SyntaxNode **>(new SyntaxNode *[]{
+                    &identifier_token
+            });
         }
     };
 }

@@ -12,15 +12,24 @@
 #include <magic_enum.hpp>
 
 #include "TokenType.h"
+#include "SyntaxNode.h"
 
 namespace collage::syntax {
-    struct Token {
+    struct Token : public SyntaxNode {
         Token(TokenType type, char literal) : type(type), literal(1, literal) {}
 
         Token(TokenType type, std::string literal) : type(type), literal(std::move(literal)) {}
 
         TokenType type;
         std::string literal;
+
+        SyntaxType syntax_type() const final {
+            return SyntaxType::Token;
+        };
+
+        std::unique_ptr<SyntaxNode**> children() final {
+            return std::make_unique<SyntaxNode**>(new SyntaxNode*[0]);
+        };
     };
 
     inline std::ostream &operator<<(std::ostream &os, const Token &token) {

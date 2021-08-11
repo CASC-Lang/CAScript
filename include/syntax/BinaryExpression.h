@@ -26,6 +26,14 @@ namespace collage::syntax {
         SyntaxType syntax_type() const final {
             return SyntaxType::Binary;
         }
+
+        std::unique_ptr<SyntaxNode**> children() final {
+            return std::make_unique<SyntaxNode**>(new SyntaxNode*[]{
+                left.get(),
+                &operator_token,
+                right.get()
+            });
+        }
     };
 
     inline std::ostream &operator<<(std::ostream &os, const BinaryExpression &expression) {

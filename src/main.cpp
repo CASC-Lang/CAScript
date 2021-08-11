@@ -7,18 +7,21 @@
 #ifdef _WIN32
 
 #include <Windows.h>
-#include <Evaluator.h>
 
 #endif
 
-#include "BinaryExpression.h"
-#include "Lexer.h"
-#include "Parser.h"
-#include "Token.h"
+#include "syntax/Lexer.h"
+#include "syntax/Parser.h"
+#include <Evaluator.h>
+#include <syntax/LiteralExpression.h>
 
 using namespace collage;
 
+static void printTree(syntax::SyntaxNode *node, std::string indent = "", bool is_last = true);
+
 int main() {
+    auto show_parse_tree = false;
+
 #ifdef _WIN32
     SetConsoleOutputCP(CP_UTF8);
 #endif
@@ -30,6 +33,10 @@ int main() {
 
         if (source_input == ":exit") {
             break;
+        } else if (source_input == ":cls") {
+            std::cout << "\033[2J\033[1;1H";
+        } else if (source_input == ":show tree") {
+            show_parse_tree = true;
         } else {
             syntax::Lexer lexer(source_input);
             auto tokens = lexer.lex();
@@ -37,6 +44,11 @@ int main() {
             syntax::Parser parser(tokens);
 
             auto expression = parser.parse();
+
+            if (show_parse_tree) {
+                printTree(static_cast<syntax::SyntaxNode *>(expression.get()));
+            }
+
             syntax::Evaluator evaluator(*expression);
             auto callback = evaluator.eval();
 
@@ -49,4 +61,24 @@ int main() {
     }
 
     return 0;
+}
+
+static void printTree(syntax::SyntaxNode *node, std::string indent, bool is_last) {
+    std::cout << indent << (is_last ? "└── " : "├── ") << magic_enum::enum_name(node->syntax_type());
+
+    if (auto token = dynamic_cast<syntax::Token *>(node)) {
+        std::cout << " " << token->literal << std::endl;
+        return;
+    }
+
+    std::cout << std::endl;
+
+    indent += is_last ? " " : "│ ";
+
+    auto children = *node->children();
+    auto size = sizeof(children) / sizeof(children[0]);
+    auto last = children[size - 1];
+    for (auto i = 0; i < size; i++) {
+        printTree(children[i], indent, last == children[i]);
+    }
 }

@@ -7,9 +7,9 @@
 
 #include <any>
 #include <functional>
-#include "ExpressionSyntax.h"
-#include "BinaryExpression.h"
-#include "UnaryExpression.h"
+#include "syntax/ExpressionSyntax.h"
+#include "syntax/BinaryExpression.h"
+#include "syntax/UnaryExpression.h"
 
 namespace collage::syntax {
     class Evaluator {
@@ -26,13 +26,7 @@ namespace collage::syntax {
 
     private:
         template<class E, class V>
-        std::any evalUnary(UnaryExpression *unary, V(*func)(E)) const;
-
-        template<class E, class V>
         std::any evalUnary(UnaryExpression *unary, std::function<V(E)> func) const;
-
-        template<class L, class R, class V>
-        std::any evalBinary(BinaryExpression *binary, V(*func)(L, R)) const;
 
         template<class L, class R, class V>
         std::any evalBinary(BinaryExpression *binary, std::function<V(L, R)> func) const;

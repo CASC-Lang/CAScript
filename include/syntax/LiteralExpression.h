@@ -24,6 +24,12 @@ namespace collage::syntax {
         SyntaxType syntax_type() const final {
             return SyntaxType::Number;
         }
+
+        std::unique_ptr<SyntaxNode **> children() final {
+            return std::make_unique<SyntaxNode **>(new SyntaxNode *[]{
+                    &literal_token
+            });
+        }
     };
 
     inline std::ostream &operator<<(std::ostream &os, const LiteralExpression &expression) {

@@ -3,10 +3,10 @@
 //
 
 #include <sstream>
-#include <LiteralExpression.h>
-#include <BinaryExpression.h>
+#include <syntax/LiteralExpression.h>
+#include <syntax/BinaryExpression.h>
 #include <cmath>
-#include <ParenthesizedExpression.h>
+#include <syntax/ParenthesizedExpression.h>
 #include "Evaluator.h"
 
 std::any collage::syntax::Evaluator::evalExpression(ExpressionSyntax &syntax) const {
@@ -53,7 +53,7 @@ std::any collage::syntax::Evaluator::evalExpression(ExpressionSyntax &syntax) co
                 result = Evaluator::evalBinary<double, double, double>(binary, std::divides<>{});
                 break;
             case TokenType::Percent:
-                result = Evaluator::evalBinary<double, double, double>(binary, std::fmod);
+                result = Evaluator::evalBinary<double, double, double>(binary, fmodf);
                 break;
             default:
                 break;
@@ -64,21 +64,8 @@ std::any collage::syntax::Evaluator::evalExpression(ExpressionSyntax &syntax) co
 }
 
 template<class E, class V>
-std::any collage::syntax::Evaluator::evalUnary(collage::syntax::UnaryExpression *unary, V(*func)(E)) const {
-    return func(std::any_cast<E>(evalExpression(*unary->expression)));
-}
-
-template<class E, class V>
 std::any collage::syntax::Evaluator::evalUnary(UnaryExpression *unary, std::function<V(E)> func) const {
     return func(std::any_cast<E>(evalExpression(*unary->expression)));
-}
-
-template<class L, class R, class V>
-std::any collage::syntax::Evaluator::evalBinary(BinaryExpression *binary, V(*func)(L, R)) const {
-    auto evaluated_left = any_cast<L>(evalExpression(*binary->left));
-    auto evaluated_right = any_cast<R>(evalExpression(*binary->right));
-
-    return func(evaluated_left, evaluated_right);
 }
 
 template<class L, class R, class V>

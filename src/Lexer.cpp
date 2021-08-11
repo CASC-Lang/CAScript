@@ -2,8 +2,8 @@
 // Created by ChAoS-UnItY on 8/10/2021.
 //
 
-#include "Lexer.h"
-#include "Token.h"
+#include "syntax/Lexer.h"
+#include "syntax/Token.h"
 
 using namespace collage;
 

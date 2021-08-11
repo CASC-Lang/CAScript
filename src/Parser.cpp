@@ -2,13 +2,13 @@
 // Created by ChAoS-UnItY on 8/10/2021.
 //
 
-#include <Parser.h>
-#include <BinaryExpression.h>
-#include <LiteralExpression.h>
+#include <syntax/Parser.h>
+#include <syntax/BinaryExpression.h>
+#include <syntax/LiteralExpression.h>
 #include <memory>
-#include <IdentifierExpression.h>
-#include <UnaryExpression.h>
-#include <ParenthesizedExpression.h>
+#include <syntax/IdentifierExpression.h>
+#include <syntax/UnaryExpression.h>
+#include <syntax/ParenthesizedExpression.h>
 
 using namespace collage;
 
