@@ -46,7 +46,7 @@ std::shared_ptr<syntax::ExpressionSyntax> syntax::Parser::parseExpression(unsign
         if (precedence == 0 || precedence <= parent_precedence) break;
 
         const auto &operator_token = next();
-        const auto &right = parseExpression();
+        const auto &right = parseExpression(precedence);
         left = std::make_shared<syntax::BinaryExpression>(BinaryExpression(left, operator_token, right));
     }
 
