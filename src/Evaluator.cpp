@@ -6,6 +6,7 @@
 #include <LiteralExpression.h>
 #include <BinaryExpression.h>
 #include <cmath>
+#include <ParenthesizedExpression.h>
 #include "Evaluator.h"
 
 std::any collage::syntax::Evaluator::evalExpression(ExpressionSyntax &syntax) const {
@@ -22,6 +23,8 @@ std::any collage::syntax::Evaluator::evalExpression(ExpressionSyntax &syntax) co
                 result = b;
                 break;
         }
+    } else if (auto *parenthesized = dynamic_cast<ParenthesizedExpression *>(&syntax)) {
+        result = evalExpression(*parenthesized->expression);
     } else if (auto *unary = dynamic_cast<UnaryExpression *>(&syntax)) {
         switch (unary->operator_token.type) {
             case TokenType::Plus:

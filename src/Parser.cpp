@@ -8,6 +8,7 @@
 #include <memory>
 #include <IdentifierExpression.h>
 #include <UnaryExpression.h>
+#include <ParenthesizedExpression.h>
 
 using namespace collage;
 
@@ -64,16 +65,22 @@ std::shared_ptr<syntax::ExpressionSyntax> syntax::Parser::parseExpression(unsign
 
 std::shared_ptr<syntax::ExpressionSyntax> syntax::Parser::parsePrimaryExpression() {
     switch (Parser::current().type) {
+        case TokenType::OpenParenthesis: {
+            const auto &open_parenthesis_token = match(TokenType::OpenParenthesis);
+            const auto &expression = parseExpression();
+            const auto &close_parenthesis_token = match(TokenType::CloseParenthesis);
+            return std::make_shared<syntax::ParenthesizedExpression>(ParenthesizedExpression(open_parenthesis_token, expression, close_parenthesis_token));
+        }
         case TokenType::NumberLiteral: {
-            const auto number_token = match(TokenType::NumberLiteral);
+            const auto &number_token = match(TokenType::NumberLiteral);
             return std::make_shared<syntax::LiteralExpression>(LiteralExpression(number_token, LiteralType::Number));
         }
         case TokenType::BoolLiteral: {
-            const auto bool_token = match(TokenType::BoolLiteral);
+            const auto &bool_token = match(TokenType::BoolLiteral);
             return std::make_shared<syntax::LiteralExpression>(LiteralExpression(bool_token, LiteralType::Bool));
         }
         default: {
-            const auto identifier_token = match(TokenType::Identifier);
+            const auto &identifier_token = match(TokenType::Identifier);
             return std::make_shared<syntax::IdentifierExpression>(IdentifierExpression(identifier_token));
         }
     }

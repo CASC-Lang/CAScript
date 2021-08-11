@@ -9,6 +9,7 @@ namespace collage::syntax {
     enum class SyntaxType {
         Id,
         Number,
+        Parenthesized,
         Unary,
         Binary,
     };
