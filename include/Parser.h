@@ -33,7 +33,7 @@ namespace collage::syntax {
 
         std::shared_ptr<syntax::ExpressionSyntax> parse();
 
-        std::shared_ptr<syntax::ExpressionSyntax> parseExpression();
+        std::shared_ptr<syntax::ExpressionSyntax> parseExpression(unsigned parent_precedence = 0);
 
         std::shared_ptr<syntax::ExpressionSyntax> parsePrimaryExpression();
     };

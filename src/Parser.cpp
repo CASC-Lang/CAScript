@@ -37,10 +37,14 @@ std::shared_ptr<syntax::ExpressionSyntax> syntax::Parser::parse() {
     return parseExpression();
 }
 
-std::shared_ptr<syntax::ExpressionSyntax> syntax::Parser::parseExpression() {
+std::shared_ptr<syntax::ExpressionSyntax> syntax::Parser::parseExpression(unsigned parent_precedence) {
     auto left = parsePrimaryExpression();
 
-    while (Parser::current().type == TokenType::Plus) {
+    for (;;) {
+        auto precedence = binary_precedence(Parser::current().type);
+
+        if (precedence == 0 || precedence <= parent_precedence) break;
+
         const auto &operator_token = next();
         const auto &right = parseExpression();
         left = std::make_shared<syntax::BinaryExpression>(BinaryExpression(left, operator_token, right));

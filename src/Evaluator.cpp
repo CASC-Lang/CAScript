@@ -24,7 +24,25 @@ std::any collage::syntax::Evaluator::evalExpression(ExpressionSyntax &syntax) co
                 break;
         }
     } else if (auto *binary = dynamic_cast<BinaryExpression *>(&syntax)) {
-        result = any_cast<long long>(evalExpression(*binary->left)) + any_cast<long long>(evalExpression(*binary->right));
+        auto left = any_cast<long long>(evalExpression(*binary->left));
+        auto right = any_cast<long long>(evalExpression(*binary->right));
+
+        switch (binary->operator_token.type) {
+            case TokenType::Plus:
+                result = left + right;
+                break;
+            case TokenType::Minus:
+                result = left - right;
+                break;
+            case TokenType::Star:
+                result = left * right;
+                break;
+            case TokenType::Slash:
+                result = left / right;
+                break;
+            default:
+                break;
+        }
     }
 
     return result;
