@@ -7,7 +7,9 @@
 
 namespace collage::syntax {
     enum class TokenType {
-        Number,
+        Identifier,
+        BoolLiteral,
+        NumberLiteral,
         Plus,
         Minus,
         Star,

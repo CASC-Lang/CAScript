@@ -2,17 +2,29 @@
 // Created by ChAoS_UnItY on 2021/8/11.
 //
 
-#include <NumberExpression.h>
+#include <sstream>
+#include <LiteralExpression.h>
 #include <BinaryExpression.h>
 #include "Evaluator.h"
 
-collage::syntax::EvaluationCallbackValue collage::syntax::Evaluator::evalExpression(ExpressionSyntax &syntax) const {
-    collage::syntax::EvaluationCallbackValue result{};
+std::any collage::syntax::Evaluator::evalExpression(ExpressionSyntax &syntax) const {
+    std::any result;
 
-    if (auto *number = dynamic_cast<NumberExpression *>(&syntax)) {
-        result.i = std::stoll(number->number_token.literal);
+    if (auto *literal = dynamic_cast<LiteralExpression *>(&syntax)) {
+        switch (literal->type) {
+            case LiteralType::Long:
+                result = std::stoll(literal->literal_token.literal);
+                break;
+            case LiteralType::Double:
+                break;
+            case LiteralType::Bool:
+                bool b;
+                std::istringstream(literal->literal_token.literal) >> std::boolalpha >> b;
+                result = b;
+                break;
+        }
     } else if (auto *binary = dynamic_cast<BinaryExpression *>(&syntax)) {
-        result.i = evalExpression(*binary->left).i + evalExpression(*binary->right).i;
+        result = any_cast<long long>(evalExpression(*binary->left)) + any_cast<long long>(evalExpression(*binary->right));
     }
 
     return result;

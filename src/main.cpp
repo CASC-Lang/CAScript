@@ -36,7 +36,11 @@ int main() {
     syntax::Evaluator evaluator(*expression);
     auto callback = evaluator.eval();
 
-    std::cout << callback.i << std::endl;
+    if (auto b = any_cast<bool>(&callback)) {
+        std::cout << std::boolalpha << *b << std::endl;
+    } else if (auto ll = any_cast<long long>(&callback)) {
+        std::cout << *ll << std::endl;
+    }
 
     return 0;
 }

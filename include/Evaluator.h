@@ -5,25 +5,21 @@
 #ifndef COLLAGE_CPP_EVALUATOR_H
 #define COLLAGE_CPP_EVALUATOR_H
 
+#include <any>
 #include "ExpressionSyntax.h"
 
 namespace collage::syntax {
-    union EvaluationCallbackValue {
-        bool b;
-        long long i;
-    };
-
     class Evaluator {
     public:
         ExpressionSyntax &root;
 
         explicit Evaluator(ExpressionSyntax &root) : root(root) {};
 
-        EvaluationCallbackValue eval() const {
+        std::any eval() const {
             return evalExpression(root);
         };
 
-        EvaluationCallbackValue evalExpression(ExpressionSyntax &syntax) const;
+        std::any evalExpression(ExpressionSyntax &syntax) const;
     };
 }
 

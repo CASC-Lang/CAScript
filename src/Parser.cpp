@@ -4,8 +4,9 @@
 
 #include <Parser.h>
 #include <BinaryExpression.h>
-#include <NumberExpression.h>
+#include <LiteralExpression.h>
 #include <memory>
+#include <IdentifierExpression.h>
 
 using namespace collage;
 
@@ -49,7 +50,18 @@ std::shared_ptr<syntax::ExpressionSyntax> syntax::Parser::parseExpression() {
 }
 
 std::shared_ptr<syntax::ExpressionSyntax> syntax::Parser::parsePrimaryExpression() {
-    auto number_token = match(TokenType::Number);
-
-    return std::make_shared<syntax::NumberExpression>(NumberExpression(number_token));
+    switch (Parser::current().type) {
+        case TokenType::NumberLiteral: {
+            const auto number_token = match(TokenType::NumberLiteral);
+            return std::make_shared<syntax::LiteralExpression>(LiteralExpression(number_token, LiteralType::Long));
+        }
+        case TokenType::BoolLiteral: {
+            const auto bool_token = match(TokenType::BoolLiteral);
+            return std::make_shared<syntax::LiteralExpression>(LiteralExpression(bool_token, LiteralType::Bool));
+        }
+        default: {
+            const auto identifier_token = match(TokenType::Identifier);
+            return std::make_shared<syntax::IdentifierExpression>(IdentifierExpression(identifier_token));
+        }
+    }
 }

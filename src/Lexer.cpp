@@ -30,13 +30,20 @@ std::vector<syntax::Token> syntax::Lexer::lex() {
                 pos++;
                 break;
             default:
-                if (std::isdigit(source[pos])) {
+                if (std::isalpha(source[pos])) {
+                    auto start = pos;
+                    while (std::isalpha(source[pos++]));
+
+                    auto len = pos - start;
+                    auto literal = source.substr(start, len);
+                    tokens.emplace_back(literal == "true" || literal == "false" ? TokenType::BoolLiteral : TokenType::Identifier, literal);
+                } else if (std::isdigit(source[pos])) {
                     auto start = pos;
                     while (std::isdigit(source[pos++]));
 
                     auto len = pos - start;
                     auto number_literal = source.substr(start, len);
-                    tokens.emplace_back(TokenType::Number, number_literal);
+                    tokens.emplace_back(TokenType::NumberLiteral, number_literal);
                 }
                 break;
         }
