@@ -14,11 +14,11 @@ namespace collage::syntax {
     class ParenthesizedExpression : public ExpressionSyntax {
     public:
         Token open_parenthesis;
-        std::shared_ptr<syntax::ExpressionSyntax> expression;
+        std::unique_ptr<syntax::ExpressionSyntax> expression;
         Token close_parenthesis;
 
         ParenthesizedExpression(Token open_parenthesis,
-                                std::shared_ptr<syntax::ExpressionSyntax> expression,
+                                std::unique_ptr<syntax::ExpressionSyntax> expression,
                                 Token close_parenthesis) :
                 open_parenthesis(std::move(open_parenthesis)), expression(std::move(expression)),
                 close_parenthesis(std::move(close_parenthesis)) {};

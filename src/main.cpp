@@ -24,22 +24,28 @@ int main() {
 #endif
     std::setvbuf(stdout, nullptr, _IONBF, 0);
 
-    std::string source_input;
-    std::getline(std::cin, source_input);
+    for (;;) {
+        std::string source_input;
+        std::getline(std::cin, source_input);
 
-    syntax::Lexer lexer(source_input);
-    auto tokens = lexer.lex();
+        if (source_input == ":exit") {
+            break;
+        } else {
+            syntax::Lexer lexer(source_input);
+            auto tokens = lexer.lex();
 
-    syntax::Parser parser(tokens);
+            syntax::Parser parser(tokens);
 
-    auto expression = parser.parse();
-    syntax::Evaluator evaluator(*expression);
-    auto callback = evaluator.eval();
+            auto expression = parser.parse();
+            syntax::Evaluator evaluator(*expression);
+            auto callback = evaluator.eval();
 
-    if (auto b = any_cast<bool>(&callback)) {
-        std::cout << std::boolalpha << *b << std::endl;
-    } else if (auto ll = any_cast<double>(&callback)) {
-        std::cout << *ll << std::endl;
+            if (auto b = any_cast<bool>(&callback)) {
+                std::cout << std::boolalpha << *b << std::endl;
+            } else if (auto ll = any_cast<double>(&callback)) {
+                std::cout << *ll << std::endl;
+            }
+        }
     }
 
     return 0;

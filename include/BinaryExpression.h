@@ -14,13 +14,13 @@
 namespace collage::syntax {
     class BinaryExpression : public ExpressionSyntax {
     public:
-        std::shared_ptr<ExpressionSyntax> left;
+        std::unique_ptr<ExpressionSyntax> left;
         Token operator_token;
-        std::shared_ptr<ExpressionSyntax> right;
+        std::unique_ptr<ExpressionSyntax> right;
 
-        BinaryExpression(std::shared_ptr<ExpressionSyntax> left,
+        BinaryExpression(std::unique_ptr<ExpressionSyntax> left,
                          Token operator_token,
-                         std::shared_ptr<ExpressionSyntax> right) :
+                         std::unique_ptr<ExpressionSyntax> right) :
                 left(std::move(left)), operator_token(std::move(operator_token)), right(std::move(right)) {};
 
         SyntaxType syntax_type() const final {

@@ -28,8 +28,14 @@ namespace collage::syntax {
         template<class E, class V>
         std::any evalUnary(UnaryExpression *unary, V(*func)(E)) const;
 
+        template<class E, class V>
+        std::any evalUnary(UnaryExpression *unary, std::function<V(E)> func) const;
+
         template<class L, class R, class V>
         std::any evalBinary(BinaryExpression *binary, V(*func)(L, R)) const;
+
+        template<class L, class R, class V>
+        std::any evalBinary(BinaryExpression *binary, std::function<V(L, R)> func) const;
     };
 }
 

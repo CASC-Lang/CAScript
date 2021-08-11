@@ -15,9 +15,9 @@ namespace collage::syntax {
     class UnaryExpression : public ExpressionSyntax {
     public:
         Token operator_token;
-        std::shared_ptr<ExpressionSyntax> expression;
+        std::unique_ptr<ExpressionSyntax> expression;
 
-        UnaryExpression(Token operator_token, std::shared_ptr<ExpressionSyntax> expression) : operator_token(std::move(operator_token)),
+        UnaryExpression(Token operator_token, std::unique_ptr<ExpressionSyntax> expression) : operator_token(std::move(operator_token)),
                 expression(std::move(expression)) {};
 
         SyntaxType syntax_type() const final {

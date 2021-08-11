@@ -35,17 +35,17 @@ syntax::Token syntax::Parser::next() {
     return current;
 }
 
-std::shared_ptr<syntax::ExpressionSyntax> syntax::Parser::parse() {
+std::unique_ptr<syntax::ExpressionSyntax> syntax::Parser::parse() {
     return parseExpression();
 }
 
-std::shared_ptr<syntax::ExpressionSyntax> syntax::Parser::parseExpression(unsigned parent_precedence) {
-    std::shared_ptr<syntax::ExpressionSyntax> left;
+std::unique_ptr<syntax::ExpressionSyntax> syntax::Parser::parseExpression(unsigned parent_precedence) {
+    std::unique_ptr<syntax::ExpressionSyntax> left;
     auto precedence = unary_precedence(Parser::current().type);
     if (precedence != 0 || precedence > parent_precedence) {
         const auto &operator_token = next();
-        const auto expression = parseExpression();
-        left = std::make_shared<syntax::UnaryExpression>(UnaryExpression(operator_token, expression));
+        auto expression = parseExpression(precedence);
+        left = std::make_unique<syntax::UnaryExpression>(UnaryExpression(operator_token, std::move(expression)));
     } else {
         left = parsePrimaryExpression();
     }
@@ -56,32 +56,32 @@ std::shared_ptr<syntax::ExpressionSyntax> syntax::Parser::parseExpression(unsign
         if (precedence == 0 || precedence <= parent_precedence) break;
 
         const auto &operator_token = next();
-        const auto &right = parseExpression(precedence);
-        left = std::make_shared<syntax::BinaryExpression>(BinaryExpression(left, operator_token, right));
+        auto right = parseExpression(precedence);
+        left = std::make_unique<syntax::BinaryExpression>(BinaryExpression(std::move(left), operator_token, std::move(right)));
     }
 
     return left;
 }
 
-std::shared_ptr<syntax::ExpressionSyntax> syntax::Parser::parsePrimaryExpression() {
+std::unique_ptr<syntax::ExpressionSyntax> syntax::Parser::parsePrimaryExpression() {
     switch (Parser::current().type) {
         case TokenType::OpenParenthesis: {
             const auto &open_parenthesis_token = match(TokenType::OpenParenthesis);
-            const auto &expression = parseExpression();
+            auto expression = parseExpression();
             const auto &close_parenthesis_token = match(TokenType::CloseParenthesis);
-            return std::make_shared<syntax::ParenthesizedExpression>(ParenthesizedExpression(open_parenthesis_token, expression, close_parenthesis_token));
+            return std::make_unique<syntax::ParenthesizedExpression>(ParenthesizedExpression(open_parenthesis_token, std::move(expression), close_parenthesis_token));
         }
         case TokenType::NumberLiteral: {
             const auto &number_token = match(TokenType::NumberLiteral);
-            return std::make_shared<syntax::LiteralExpression>(LiteralExpression(number_token, LiteralType::Number));
+            return std::make_unique<syntax::LiteralExpression>(LiteralExpression(number_token, LiteralType::Number));
         }
         case TokenType::BoolLiteral: {
             const auto &bool_token = match(TokenType::BoolLiteral);
-            return std::make_shared<syntax::LiteralExpression>(LiteralExpression(bool_token, LiteralType::Bool));
+            return std::make_unique<syntax::LiteralExpression>(LiteralExpression(bool_token, LiteralType::Bool));
         }
         default: {
             const auto &identifier_token = match(TokenType::Identifier);
-            return std::make_shared<syntax::IdentifierExpression>(IdentifierExpression(identifier_token));
+            return std::make_unique<syntax::IdentifierExpression>(IdentifierExpression(identifier_token));
         }
     }
 }
