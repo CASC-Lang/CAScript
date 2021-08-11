@@ -7,6 +7,7 @@
 #include <LiteralExpression.h>
 #include <memory>
 #include <IdentifierExpression.h>
+#include <UnaryExpression.h>
 
 using namespace collage;
 
@@ -38,10 +39,18 @@ std::shared_ptr<syntax::ExpressionSyntax> syntax::Parser::parse() {
 }
 
 std::shared_ptr<syntax::ExpressionSyntax> syntax::Parser::parseExpression(unsigned parent_precedence) {
-    auto left = parsePrimaryExpression();
+    std::shared_ptr<syntax::ExpressionSyntax> left;
+    auto precedence = unary_precedence(Parser::current().type);
+    if (precedence != 0 || precedence > parent_precedence) {
+        const auto &operator_token = next();
+        const auto expression = parseExpression();
+        left = std::make_shared<syntax::UnaryExpression>(UnaryExpression(operator_token, expression));
+    } else {
+        left = parsePrimaryExpression();
+    }
 
     for (;;) {
-        auto precedence = binary_precedence(Parser::current().type);
+        precedence = binary_precedence(Parser::current().type);
 
         if (precedence == 0 || precedence <= parent_precedence) break;
 

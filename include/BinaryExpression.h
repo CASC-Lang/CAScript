@@ -18,9 +18,10 @@ namespace collage::syntax {
         Token operator_token;
         std::shared_ptr<ExpressionSyntax> right;
 
-        BinaryExpression(std::shared_ptr<ExpressionSyntax> left, Token operator_token,
+        BinaryExpression(std::shared_ptr<ExpressionSyntax> left,
+                         Token operator_token,
                          std::shared_ptr<ExpressionSyntax> right) :
-                left(std::move(left)), operator_token(std::move(operator_token)), right(std::move(right)) {}
+                left(std::move(left)), operator_token(std::move(operator_token)), right(std::move(right)) {};
 
         SyntaxType syntax_type() const final {
             return SyntaxType::Binary;

@@ -11,6 +11,12 @@ std::vector<syntax::Token> syntax::Lexer::lex() {
     std::vector<Token> tokens;
     while (pos < source.length()) {
         switch (source[pos]) {
+            case '(':
+                tokens.emplace_back(TokenType::OpenParenthesis, source[pos++]);
+                break;
+            case ')':
+                tokens.emplace_back(TokenType::CloseParenthesis, source[pos++]);
+                break;
             case '+':
                 tokens.emplace_back(TokenType::Plus, source[pos++]);
                 break;
@@ -22,6 +28,9 @@ std::vector<syntax::Token> syntax::Lexer::lex() {
                 break;
             case '/':
                 tokens.emplace_back(TokenType::Slash, source[pos++]);
+                break;
+            case '%':
+                tokens.emplace_back(TokenType::Percent, source[pos++]);
                 break;
             case ' ':
             case '\t':
@@ -39,7 +48,9 @@ std::vector<syntax::Token> syntax::Lexer::lex() {
                     tokens.emplace_back(literal == "true" || literal == "false" ? TokenType::BoolLiteral : TokenType::Identifier, literal);
                 } else if (std::isdigit(source[pos])) {
                     auto start = pos;
-                    while (std::isdigit(source[pos++]));
+                    while (std::isdigit(source[pos]) || source[pos] == '.') {
+                        pos++;
+                    }
 
                     auto len = pos - start;
                     auto number_literal = source.substr(start, len);
