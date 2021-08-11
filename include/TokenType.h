@@ -13,7 +13,8 @@ namespace collage::syntax {
         Plus,
         Minus,
         Star,
-        Slash
+        Slash,
+        Remainder
     };
 
     constexpr unsigned binary_precedence(TokenType token) {

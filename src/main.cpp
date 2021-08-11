@@ -38,7 +38,7 @@ int main() {
 
     if (auto b = any_cast<bool>(&callback)) {
         std::cout << std::boolalpha << *b << std::endl;
-    } else if (auto ll = any_cast<long long>(&callback)) {
+    } else if (auto ll = any_cast<double>(&callback)) {
         std::cout << *ll << std::endl;
     }
 

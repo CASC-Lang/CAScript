@@ -12,10 +12,8 @@ std::any collage::syntax::Evaluator::evalExpression(ExpressionSyntax &syntax) co
 
     if (auto *literal = dynamic_cast<LiteralExpression *>(&syntax)) {
         switch (literal->type) {
-            case LiteralType::Long:
-                result = std::stoll(literal->literal_token.literal);
-                break;
-            case LiteralType::Double:
+            case LiteralType::Number:
+                result = std::stod(literal->literal_token.literal);
                 break;
             case LiteralType::Bool:
                 bool b;
@@ -24,8 +22,8 @@ std::any collage::syntax::Evaluator::evalExpression(ExpressionSyntax &syntax) co
                 break;
         }
     } else if (auto *binary = dynamic_cast<BinaryExpression *>(&syntax)) {
-        auto left = any_cast<long long>(evalExpression(*binary->left));
-        auto right = any_cast<long long>(evalExpression(*binary->right));
+        auto left = any_cast<double>(evalExpression(*binary->left));
+        auto right = any_cast<double>(evalExpression(*binary->right));
 
         switch (binary->operator_token.type) {
             case TokenType::Plus:

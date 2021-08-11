@@ -57,7 +57,7 @@ std::shared_ptr<syntax::ExpressionSyntax> syntax::Parser::parsePrimaryExpression
     switch (Parser::current().type) {
         case TokenType::NumberLiteral: {
             const auto number_token = match(TokenType::NumberLiteral);
-            return std::make_shared<syntax::LiteralExpression>(LiteralExpression(number_token, LiteralType::Long));
+            return std::make_shared<syntax::LiteralExpression>(LiteralExpression(number_token, LiteralType::Number));
         }
         case TokenType::BoolLiteral: {
             const auto bool_token = match(TokenType::BoolLiteral);

@@ -7,8 +7,7 @@
 
 namespace collage::syntax {
     enum class LiteralType {
-        Long,
-        Double,
+        Number,
         Bool,
     };
 }
