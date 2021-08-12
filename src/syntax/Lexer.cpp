@@ -17,6 +17,15 @@ std::vector<syntax::Token> syntax::Lexer::lex() {
             case ')':
                 tokens.emplace_back(TokenType::CloseParenthesis, source[pos++]);
                 break;
+            case '=':
+                if (source[pos + 1] == '=') {
+                    tokens.emplace_back(TokenType::DoubleEqual, source.substr(pos, pos + 2));
+                    pos += 2;
+                    break;
+                } else {
+                    pos++;
+                    break;
+                }
             case '+':
                 tokens.emplace_back(TokenType::Plus, source[pos++]);
                 break;
@@ -41,7 +50,9 @@ std::vector<syntax::Token> syntax::Lexer::lex() {
             default:
                 if (std::isalpha(source[pos])) {
                     auto start = pos;
-                    while (std::isalpha(source[pos++]));
+                    while (std::isalpha(source[pos])) {
+                        pos++;
+                    };
 
                     auto len = pos - start;
                     auto literal = source.substr(start, len);

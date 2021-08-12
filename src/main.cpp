@@ -13,7 +13,7 @@
 
 #include "syntax/Lexer.h"
 #include "syntax/Parser.h"
-#include <Evaluator.h>
+#include <runtime/Evaluator.h>
 #include <binding/Binder.h>
 
 using namespace collage;
@@ -56,7 +56,7 @@ int main() {
 
             auto bound_expression = binder.bindExpression(std::move(expression));
 
-            syntax::Evaluator evaluator(*bound_expression);
+            runtime::Evaluator evaluator(*bound_expression);
             auto callback = evaluator.eval();
 
             if (auto b = any_cast<bool>(&callback)) {

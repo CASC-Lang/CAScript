@@ -12,6 +12,7 @@ namespace collage::syntax {
         NumberLiteral,
         OpenParenthesis,
         CloseParenthesis,
+        DoubleEqual,
         Plus,
         Minus,
         Star,
@@ -23,7 +24,7 @@ namespace collage::syntax {
         switch (token) {
             case TokenType::Plus:
             case TokenType::Minus:
-                return 3;
+                return 4;
             default:
                 return 0;
         }
@@ -31,13 +32,15 @@ namespace collage::syntax {
 
     constexpr unsigned binary_precedence(TokenType token) {
         switch (token) {
+            case TokenType::DoubleEqual:
+                return 1;
             case TokenType::Plus:
             case TokenType::Minus:
-                return 1;
+                return 2;
             case TokenType::Star:
             case TokenType::Slash:
             case TokenType::Percent:
-                return 2;
+                return 3;
             default:
                 return 0;
         };

@@ -5,6 +5,7 @@
 #include <sstream>
 #include <binding/BoundBinaryOperator.h>
 #include <binding/BoundBinaryExpression.h>
+#include <syntax/ParenthesizedExpression.h>
 
 #include "binding/BoundLiteralExpression.h"
 #include "binding/BoundExpression.h"
@@ -14,13 +15,15 @@
 
 std::unique_ptr<collage::binding::BoundExpression>
 collage::binding::Binder::bindExpression(std::unique_ptr<syntax::ExpressionSyntax> expression) {
-    if (auto literal = dynamic_cast<syntax::LiteralExpression*>(expression.get())) {
+    if (auto literal = dynamic_cast<syntax::LiteralExpression *>(expression.get())) {
         return bindLiteralExpression(*literal);
-    } else if (auto unary = dynamic_cast<syntax::UnaryExpression*>(expression.get())) {
+    } else if (auto unary = dynamic_cast<syntax::UnaryExpression *>(expression.get())) {
         return bindUnaryExpression(*unary);
-    } else if (auto binary = dynamic_cast<syntax::BinaryExpression*>(expression.get())) {
+    } else if (auto binary = dynamic_cast<syntax::BinaryExpression *>(expression.get())) {
         return bindBinaryExpression(*binary);
-    } else {
+    } else if (auto parenthesized = dynamic_cast<syntax::ParenthesizedExpression *>(expression.get()))
+        return bindExpression(std::move((*parenthesized).expression));
+    else {
         return std::make_unique<binding::BoundLiteralExpression>(nullptr, Type::Unidentified);
     }
 }
@@ -46,7 +49,6 @@ collage::binding::Binder::bindLiteralExpression(syntax::LiteralExpression &expre
 }
 
 
-
 std::unique_ptr<collage::binding::BoundExpression>
 collage::binding::Binder::bindUnaryExpression(collage::syntax::UnaryExpression &expression) {
     auto operand = bindExpression(std::move(expression.expression));
@@ -56,7 +58,7 @@ collage::binding::Binder::bindUnaryExpression(collage::syntax::UnaryExpression &
 
     }
 
-    return std::make_unique<BoundUnaryExpression>(operator_type->operator_type, std::move(operand));
+    return std::make_unique<BoundUnaryExpression>(*operator_type, std::move(operand));
 }
 
 std::unique_ptr<collage::binding::BoundExpression>
@@ -65,5 +67,5 @@ collage::binding::Binder::bindBinaryExpression(collage::syntax::BinaryExpression
     auto right = bindExpression(std::move(expression.right));
     auto operator_type = bind(expression.operator_token.type, left->type(), right->type());
 
-    return std::make_unique<BoundBinaryExpression>(operator_type->operator_type, std::move(left), std::move(right));
+    return std::make_unique<BoundBinaryExpression>(*operator_type, std::move(left), std::move(right));
 }

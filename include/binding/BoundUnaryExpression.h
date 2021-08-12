@@ -14,14 +14,14 @@
 namespace collage::binding {
     class BoundUnaryExpression : public BoundExpression {
     public:
-        UnaryOperatorType operator_type{};
+        BoundUnaryOperator unary_operator;
         std::unique_ptr<BoundExpression> expression;
 
-        BoundUnaryExpression(UnaryOperatorType operator_type, std::unique_ptr<BoundExpression> expression) :
-                operator_type(operator_type), expression(std::move(expression)) {};
+        BoundUnaryExpression(BoundUnaryOperator unary_operator, std::unique_ptr<BoundExpression> expression) :
+                unary_operator(unary_operator), expression(std::move(expression)) {};
 
         Type type() const final {
-            return expression->type();
+            return unary_operator.result_type;
         }
 
         BoundType bound_type() const final {

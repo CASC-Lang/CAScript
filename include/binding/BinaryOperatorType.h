@@ -11,7 +11,8 @@ namespace collage::binding {
         Minus,
         Multiplication,
         Division,
-        Modulus
+        Modulus,
+        Equal
     };
 }
 

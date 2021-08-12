@@ -77,7 +77,7 @@ std::unique_ptr<syntax::ExpressionSyntax> syntax::Parser::parsePrimaryExpression
         }
         case TokenType::BoolLiteral: {
             const auto &bool_token = match(TokenType::BoolLiteral);
-            return std::make_unique<syntax::LiteralExpression>(LiteralExpression(bool_token, binding::Type::Number));
+            return std::make_unique<syntax::LiteralExpression>(LiteralExpression(bool_token, binding::Type::Bool));
         }
         default: {
             const auto &identifier_token = match(TokenType::Identifier);

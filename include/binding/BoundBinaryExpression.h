@@ -7,26 +7,26 @@
 
 #include <memory>
 #include "BoundExpression.h"
-#include "BinaryOperatorType.h"
+#include "BoundBinaryOperator.h"
 
 namespace collage::binding {
     class BoundBinaryExpression : public BoundExpression {
     public:
         std::unique_ptr<BoundExpression> left;
-        BinaryOperatorType operator_type{};
+        BoundBinaryOperator binary_operator;
         std::unique_ptr<BoundExpression> right;
 
-        BoundBinaryExpression(BinaryOperatorType operator_type,
+        BoundBinaryExpression(BoundBinaryOperator binary_operator,
                               std::unique_ptr<BoundExpression> left,
                               std::unique_ptr<BoundExpression> right) :
-                left(std::move(left)), operator_type(operator_type), right(std::move(right)) {};
+                left(std::move(left)), binary_operator(binary_operator), right(std::move(right)) {};
 
         BoundType bound_type() const final {
             return BoundType::Binary;
         }
 
         Type type() const final {
-            return left->type();
+            return binary_operator.result_type;
         }
     };
 }

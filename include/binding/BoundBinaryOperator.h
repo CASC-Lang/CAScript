@@ -21,6 +21,10 @@ namespace collage::binding {
         BoundBinaryOperator(syntax::TokenType type, BinaryOperatorType operator_type, Type io_type) :
                 type(type), operator_type(operator_type), left_type(io_type),
                 right_type(io_type), result_type(io_type) {};
+
+        BoundBinaryOperator(syntax::TokenType type, BinaryOperatorType operator_type, Type io_type, Type result_type) :
+                type(type), operator_type(operator_type), left_type(io_type),
+                right_type(io_type), result_type(result_type) {};
     };
 
     static const BoundBinaryOperator binary_ops[] = {
@@ -28,7 +32,9 @@ namespace collage::binding {
             BoundBinaryOperator(syntax::TokenType::Minus, BinaryOperatorType::Minus, Type::Number),
             BoundBinaryOperator(syntax::TokenType::Star, BinaryOperatorType::Multiplication, Type::Number),
             BoundBinaryOperator(syntax::TokenType::Slash, BinaryOperatorType::Division, Type::Number),
-            BoundBinaryOperator(syntax::TokenType::Percent, BinaryOperatorType::Modulus, Type::Number)
+            BoundBinaryOperator(syntax::TokenType::Percent, BinaryOperatorType::Modulus, Type::Number),
+            BoundBinaryOperator(syntax::TokenType::DoubleEqual, BinaryOperatorType::Equal, Type::Number, Type::Bool),
+            BoundBinaryOperator(syntax::TokenType::DoubleEqual, BinaryOperatorType::Equal, Type::Bool)
     };
 
     static const BoundBinaryOperator *bind(syntax::TokenType type, Type left_type, Type right_type) {

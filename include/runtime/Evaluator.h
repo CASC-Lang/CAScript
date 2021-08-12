@@ -11,7 +11,7 @@
 #include <binding/BoundBinaryExpression.h>
 #include "binding/BoundExpression.h"
 
-namespace collage::syntax {
+namespace collage::runtime {
     class Evaluator {
     public:
         binding::BoundExpression &root;
