@@ -4,4 +4,3 @@
 [submodule "thirdparty/colored"]
 	path = thirdparty/colored
 	url = https://github.com/alanjian85/colored.git
-a
