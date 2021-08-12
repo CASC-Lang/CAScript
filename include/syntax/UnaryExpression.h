@@ -24,11 +24,8 @@ namespace collage::syntax {
             return SyntaxType::Unary;
         }
 
-        std::unique_ptr<SyntaxNode * *> children() final {
-            return std::make_unique<SyntaxNode **>(new SyntaxNode *[]{
-                    &operator_token,
-                    expression.get()
-            });
+        std::vector<SyntaxNode *> children() final {
+            return std::vector<SyntaxNode *>{&operator_token, expression.get()};
         }
     };
 }

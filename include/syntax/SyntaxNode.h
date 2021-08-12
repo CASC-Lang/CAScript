@@ -5,7 +5,7 @@
 #ifndef COLLAGE_CPP_SYNTAXNODE_H
 #define COLLAGE_CPP_SYNTAXNODE_H
 
-#include <memory>
+#include <vector>
 #include "SyntaxType.h"
 
 namespace collage::syntax {
@@ -15,7 +15,7 @@ namespace collage::syntax {
 
         virtual SyntaxType syntax_type() const = 0;
 
-        virtual std::unique_ptr<SyntaxNode**> children() = 0;
+        virtual std::vector<SyntaxNode*> children() = 0;
     };
 }
 

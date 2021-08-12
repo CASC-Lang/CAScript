@@ -20,10 +20,8 @@ namespace collage::syntax {
             return SyntaxType::Id;
         }
 
-        std::unique_ptr<SyntaxNode * *> children() final {
-            return std::make_unique<SyntaxNode **>(new SyntaxNode *[]{
-                    &identifier_token
-            });
+        std::vector<SyntaxNode*> children() final {
+            return std::vector<SyntaxNode*> { &identifier_token };
         }
     };
 }

@@ -27,12 +27,8 @@ namespace collage::syntax {
             return SyntaxType::Binary;
         }
 
-        std::unique_ptr<SyntaxNode**> children() final {
-            return std::make_unique<SyntaxNode**>(new SyntaxNode*[]{
-                left.get(),
-                &operator_token,
-                right.get()
-            });
+        std::vector<SyntaxNode *> children() final {
+            return std::vector<SyntaxNode *>{left.get(), &operator_token, right.get()};
         }
     };
 

@@ -13,7 +13,6 @@
 #include "syntax/Lexer.h"
 #include "syntax/Parser.h"
 #include <Evaluator.h>
-#include <syntax/LiteralExpression.h>
 
 using namespace collage;
 
@@ -28,6 +27,8 @@ int main() {
     std::setvbuf(stdout, nullptr, _IONBF, 0);
 
     for (;;) {
+        std::cout << "> ";
+
         std::string source_input;
         std::getline(std::cin, source_input);
 
@@ -73,10 +74,10 @@ static void printTree(syntax::SyntaxNode *node, std::string indent, bool is_last
 
     std::cout << std::endl;
 
-    indent += is_last ? " " : "│ ";
+    indent += is_last ? "    " : "│   ";
 
-    auto children = *node->children();
-    auto size = sizeof(children) / sizeof(children[0]);
+    auto children = node->children();
+    auto size = children.size();
     auto last = children[size - 1];
     for (auto i = 0; i < size; i++) {
         printTree(children[i], indent, last == children[i]);
