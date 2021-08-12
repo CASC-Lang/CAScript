@@ -12,17 +12,18 @@ namespace collage::binding {
     class BoundLiteralExpression: public BoundExpression {
     public:
         std::any value;
+        Type value_type;
 
-        explicit BoundLiteralExpression(std::any value): value(std::move(value)) {};
+        explicit BoundLiteralExpression(std::any value, Type value_type): value(std::move(value)), value_type(value_type) {};
 
         BoundType bound_type() const final {
             return BoundType::Literal;
         }
 
         Type type() const final {
-            if (auto number = dynamic_cast<double>(value)) {
+            if (std::any_cast<double>(value)) {
                 return Type::Number;
-            } else if (auto boolean = dynamic_cast<bool>(value)) {
+            } else if (std::any_cast<bool>(value)) {
                 return Type::Bool;
             } else {
                 return Type::Unidentified;

@@ -7,29 +7,29 @@
 
 #include <any>
 #include <functional>
-#include "syntax/ExpressionSyntax.h"
-#include "syntax/BinaryExpression.h"
-#include "syntax/UnaryExpression.h"
+#include <binding/BoundUnaryExpression.h>
+#include <binding/BoundBinaryExpression.h>
+#include "binding/BoundExpression.h"
 
 namespace collage::syntax {
     class Evaluator {
     public:
-        ExpressionSyntax &root;
+        binding::BoundExpression &root;
 
-        explicit Evaluator(ExpressionSyntax &root) : root(root) {};
+        explicit Evaluator(binding::BoundExpression &root) : root(root) {};
 
         std::any eval() const {
             return evalExpression(root);
         };
 
-        std::any evalExpression(ExpressionSyntax &syntax) const;
+        std::any evalExpression(binding::BoundExpression &syntax) const;
 
     private:
         template<class E, class V>
-        std::any evalUnary(UnaryExpression *unary, std::function<V(E)> func) const;
+        std::any evalUnary(binding::BoundUnaryExpression *unary, std::function<V(E)> func) const;
 
         template<class L, class R, class V>
-        std::any evalBinary(BinaryExpression *binary, std::function<V(L, R)> func) const;
+        std::any evalBinary(binding::BoundBinaryExpression *binary, std::function<V(L, R)> func) const;
     };
 }
 

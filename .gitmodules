@@ -2,5 +2,5 @@
 	path = thirdparty/magic_enum
 	url = https://github.com/Neargye/magic_enum.git
 [submodule "thirdparty/colored"]
-    path = thirdparty/colored
-    url = https://github.com/alanjian85/colored.git
+	path = thirdparty/colored
+	url = https://github.com/alanjian85/colored.git

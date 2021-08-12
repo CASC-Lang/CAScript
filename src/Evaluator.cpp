@@ -2,57 +2,41 @@
 // Created by ChAoS_UnItY on 2021/8/11.
 //
 
-#include <sstream>
-#include <syntax/LiteralExpression.h>
-#include <syntax/BinaryExpression.h>
 #include <cmath>
-#include <syntax/ParenthesizedExpression.h>
+#include <binding/BoundLiteralExpression.h>
 #include "Evaluator.h"
 
-std::any collage::syntax::Evaluator::evalExpression(ExpressionSyntax &syntax) const {
+std::any collage::syntax::Evaluator::evalExpression(binding::BoundExpression &syntax) const {
     std::any result;
 
-    if (auto *literal = dynamic_cast<LiteralExpression *>(&syntax)) {
-        switch (literal->type) {
-            case LiteralType::Number:
-                result = std::stod(literal->literal_token.literal);
+    if (auto *literal = dynamic_cast<binding::BoundLiteralExpression *>(&syntax)) {
+        result = literal->value;
+    } else if (auto *unary = dynamic_cast<binding::BoundUnaryExpression *>(&syntax)) {
+        switch (unary->operator_type) {
+            case binding::UnaryOperatorType::Identity:
+                result = Evaluator::evalUnary<double, double>(unary, [&](double e) { return e; });
                 break;
-            case LiteralType::Bool:
-                bool b;
-                std::istringstream(literal->literal_token.literal) >> std::boolalpha >> b;
-                result = b;
-                break;
-        }
-    } else if (auto *parenthesized = dynamic_cast<ParenthesizedExpression *>(&syntax)) {
-        result = evalExpression(*parenthesized->expression);
-    } else if (auto *unary = dynamic_cast<UnaryExpression *>(&syntax)) {
-        switch (unary->operator_token.type) {
-            case TokenType::Plus:
-                result = Evaluator::evalUnary<double, double>(unary,[&](double e) { return e; });
-                break;
-            case TokenType::Minus:
+            case binding::UnaryOperatorType::Negation:
                 result = Evaluator::evalUnary<double, double>(unary, std::negate<>{});
                 break;
             default:
                 break;
         }
-    } else if (auto *binary = dynamic_cast<BinaryExpression *>(&syntax)) {
-        switch (binary->operator_token.type) {
-            case TokenType::Plus:
-                result = Evaluator::evalBinary<double, double, double>(
-                        binary, std::plus<>{}
-                );
+    } else if (auto *binary = dynamic_cast<binding::BoundBinaryExpression *>(&syntax)) {
+        switch (binary->operator_type) {
+            case binding::BinaryOperatorType::Addition:
+                result = Evaluator::evalBinary<double, double, double>(binary, std::plus<>{});
                 break;
-            case TokenType::Minus:
+            case binding::BinaryOperatorType::Minus:
                 result = Evaluator::evalBinary<double, double, double>(binary, std::minus<>{});
                 break;
-            case TokenType::Star:
+            case binding::BinaryOperatorType::Multiplication:
                 result = Evaluator::evalBinary<double, double, double>(binary, std::multiplies<>{});
                 break;
-            case TokenType::Slash:
+            case binding::BinaryOperatorType::Division:
                 result = Evaluator::evalBinary<double, double, double>(binary, std::divides<>{});
                 break;
-            case TokenType::Percent:
+            case binding::BinaryOperatorType::Modulus:
                 result = Evaluator::evalBinary<double, double, double>(binary, fmodf);
                 break;
             default:
@@ -64,12 +48,13 @@ std::any collage::syntax::Evaluator::evalExpression(ExpressionSyntax &syntax) co
 }
 
 template<class E, class V>
-std::any collage::syntax::Evaluator::evalUnary(UnaryExpression *unary, std::function<V(E)> func) const {
+std::any collage::syntax::Evaluator::evalUnary(binding::BoundUnaryExpression *unary, std::function<V(E)> func) const {
     return func(std::any_cast<E>(evalExpression(*unary->expression)));
 }
 
 template<class L, class R, class V>
-std::any collage::syntax::Evaluator::evalBinary(BinaryExpression *binary, std::function<V(L, R)> func) const {
+std::any
+collage::syntax::Evaluator::evalBinary(binding::BoundBinaryExpression *binary, std::function<V(L, R)> func) const {
     auto evaluated_left = any_cast<L>(evalExpression(*binary->left));
     auto evaluated_right = any_cast<R>(evalExpression(*binary->right));
 

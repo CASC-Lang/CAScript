@@ -6,7 +6,10 @@
 #define COLLAGE_CPP_BOUNDUNARYEXPRESSION_H
 
 #include <memory>
+#include "syntax/TokenType.h"
 #include "BoundExpression.h"
+#include "UnaryOperatorType.h"
+#include "BoundUnaryOperator.h"
 
 namespace collage::binding {
     class BoundUnaryExpression : public BoundExpression {
@@ -20,11 +23,10 @@ namespace collage::binding {
         Type type() const final {
             return expression->type();
         }
-    };
 
-    enum class UnaryOperatorType {
-        Identity,
-        Negation
+        BoundType bound_type() const final {
+            return BoundType::Unary;
+        }
     };
 }
 

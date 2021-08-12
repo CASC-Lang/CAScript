@@ -7,7 +7,7 @@
 
 #include "Token.h"
 #include "ExpressionSyntax.h"
-#include "LiteralType.h"
+#include "binding/Type.h"
 
 #include <utility>
 
@@ -15,9 +15,9 @@ namespace collage::syntax {
     class LiteralExpression : public ExpressionSyntax {
     public:
         Token literal_token;
-        LiteralType type;
+        binding::Type type;
 
-        explicit LiteralExpression(Token literal_token, LiteralType type) : ExpressionSyntax(),
+        explicit LiteralExpression(Token literal_token, binding::Type type) : ExpressionSyntax(),
                                                                             literal_token(std::move(literal_token)),
                                                                             type(type) {}
 
@@ -29,11 +29,6 @@ namespace collage::syntax {
             return std::vector<SyntaxNode *>{&literal_token};
         }
     };
-
-    inline std::ostream &operator<<(std::ostream &os, const LiteralExpression &expression) {
-        os << "<Expr: NumberLiteral/Token: " << expression.literal_token << ">";
-        return os;
-    }
 }
 
 #endif //COLLAGE_CPP_LITERALEXPRESSION_H
