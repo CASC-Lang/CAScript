@@ -15,9 +15,15 @@ namespace collage::syntax {
         DoubleEqual,
         BangEqual,
         DoubleGreaterThan,
+        GreaterThan,
+        GreaterEqualThan,
         DoubleLessThan,
+        LessThan,
+        LessEqualThan,
+        DoubleAmpersand,
         Ampersand,
         Caret,
+        DoublePipe,
         Pipe,
         Bang,
         Tilde,
@@ -34,7 +40,7 @@ namespace collage::syntax {
             case TokenType::Bang:
             case TokenType::Plus:
             case TokenType::Minus:
-                return 4;
+                return 11;
             default:
                 return 0;
         }
@@ -42,16 +48,34 @@ namespace collage::syntax {
 
     constexpr unsigned binary_precedence(TokenType token) {
         switch (token) {
+            case TokenType::DoublePipe:
+                return 1;
+            case TokenType::DoubleAmpersand:
+                return 2;
+            case TokenType::Pipe:
+                return 3;
+            case TokenType::Caret:
+                return 4;
+            case TokenType::Ampersand:
+                return 5;
             case TokenType::DoubleEqual:
             case TokenType::BangEqual:
-                return 1;
+                return 6;
+            case TokenType::GreaterThan:
+            case TokenType::GreaterEqualThan:
+            case TokenType::LessThan:
+            case TokenType::LessEqualThan:
+                return 7;
+            case TokenType::DoubleGreaterThan:
+            case TokenType::DoubleLessThan:
+                return 8;
             case TokenType::Plus:
             case TokenType::Minus:
-                return 2;
+                return 9;
             case TokenType::Star:
             case TokenType::Slash:
             case TokenType::Percent:
-                return 3;
+                return 10;
             default:
                 return 0;
         };

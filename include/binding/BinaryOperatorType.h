@@ -19,6 +19,12 @@ namespace collage::binding {
         BitwiseAnd,
         BitwiseExclusiveOr,
         BitwiseInclusiveOr,
+        LogicalAnd,
+        LogicalOr,
+        Greater,
+        GreaterEqual,
+        Less,
+        LessEqual,
     };
 }
 

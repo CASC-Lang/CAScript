@@ -37,26 +37,40 @@ std::vector<syntax::Token> syntax::Lexer::lex() {
                 if (source[pos + 1] == '>') {
                     tokens.emplace_back(TokenType::DoubleGreaterThan, source.substr(pos, pos + 2));
                     pos += 2;
+                } else if (source[pos + 1] == '=') {
+                    tokens.emplace_back(TokenType::GreaterEqualThan, source.substr(pos, pos + 2));
                 } else {
-                    pos++;
+                    tokens.emplace_back(TokenType::GreaterThan, source[pos++]);
                 }
                 break;
             case '<':
                 if (source[pos + 1] == '<') {
                     tokens.emplace_back(TokenType::DoubleLessThan, source.substr(pos, pos + 2));
                     pos += 2;
+                } else if (source[pos + 1] == '=') {
+                    tokens.emplace_back(TokenType::LessEqualThan, source.substr(pos, pos + 2));
                 } else {
-                    pos++;
+                    tokens.emplace_back(TokenType::LessThan, source[pos++]);
                 }
                 break;
             case '&':
-                tokens.emplace_back(TokenType::Ampersand, source[pos++]);
+                if (source[pos + 1] == '&') {
+                    tokens.emplace_back(TokenType::DoubleAmpersand, source.substr(pos, pos + 2));
+                    pos += 2;
+                } else {
+                    tokens.emplace_back(TokenType::Ampersand, source[pos++]);
+                }
                 break;
             case '^':
                 tokens.emplace_back(TokenType::Caret, source[pos++]);
                 break;
             case '|':
-                tokens.emplace_back(TokenType::Pipe, source[pos++]);
+                if (source[pos + 1] == '|') {
+                    tokens.emplace_back(TokenType::DoublePipe, source.substr(pos, pos + 2));
+                    pos += 2;
+                } else {
+                    tokens.emplace_back(TokenType::Pipe, source[pos++]);
+                }
                 break;
             case '~':
                 tokens.emplace_back(TokenType::Tilde, source[pos++]);

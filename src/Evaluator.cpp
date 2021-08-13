@@ -14,16 +14,16 @@ std::any collage::runtime::Evaluator::evalExpression(binding::BoundExpression &s
     } else if (auto *unary = dynamic_cast<binding::BoundUnaryExpression *>(&syntax)) {
         switch (unary->unary_operator.operator_type) {
             case binding::UnaryOperatorType::Identity:
-                result = Evaluator::evalUnary<double, double>(unary, std::identity{});
+                result = evalUnary<double, double>(unary, std::identity{});
                 break;
             case binding::UnaryOperatorType::Negation:
-                result = Evaluator::evalUnary<double, double>(unary, std::negate<>{});
+                result = evalUnary<double, double>(unary, std::negate<>{});
                 break;
             case binding::UnaryOperatorType::LogicalNot:
-                result = Evaluator::evalUnary<bool, bool>(unary, std::logical_not<>{});
+                result = evalUnary<bool, bool>(unary, std::logical_not<>{});
                 break;
             case binding::UnaryOperatorType::Complement:
-                result = Evaluator::evalUnary(unary, std::bit_not<>{});
+                result = evalUnary(unary, std::bit_not<>{});
             default:
                 break;
         }
@@ -44,33 +44,51 @@ std::any collage::runtime::Evaluator::evalExpression(binding::BoundExpression &s
             case binding::BinaryOperatorType::BitwiseInclusiveOr:
                 result = evalBinary(binary, std::bit_or<>{});
                 break;
+            case binding::BinaryOperatorType::LogicalAnd:
+                result = evalBinary<bool, bool, bool>(binary, std::logical_and{});
+                break;
+            case binding::BinaryOperatorType::LogicalOr:
+                result = evalBinary<bool, bool, bool>(binary, std::logical_or{});
+                break;
+            case binding::BinaryOperatorType::Greater:
+                result = evalBinary<double, double, bool>(binary, std::greater<>{});
+                break;
+            case binding::BinaryOperatorType::GreaterEqual:
+                result = evalBinary<double, double, bool>(binary, std::greater_equal<>{});
+                break;
+            case binding::BinaryOperatorType::Less:
+                result = evalBinary<double, double, bool>(binary, std::less<>{});
+                break;
+            case binding::BinaryOperatorType::LessEqual:
+                result = evalBinary<double, double, bool>(binary, std::less_equal<>{});
+                break;
             case binding::BinaryOperatorType::Addition:
-                result = Evaluator::evalBinary<double, double, double>(binary, std::plus<>{});
+                result = evalBinary<double, double, double>(binary, std::plus<>{});
                 break;
             case binding::BinaryOperatorType::Minus:
-                result = Evaluator::evalBinary<double, double, double>(binary, std::minus<>{});
+                result = evalBinary<double, double, double>(binary, std::minus<>{});
                 break;
             case binding::BinaryOperatorType::Multiplication:
-                result = Evaluator::evalBinary<double, double, double>(binary, std::multiplies<>{});
+                result = evalBinary<double, double, double>(binary, std::multiplies<>{});
                 break;
             case binding::BinaryOperatorType::Division:
-                result = Evaluator::evalBinary<double, double, double>(binary, std::divides<>{});
+                result = evalBinary<double, double, double>(binary, std::divides<>{});
                 break;
             case binding::BinaryOperatorType::Modulus:
-                result = Evaluator::evalBinary<double, double, double>(binary, fmodf);
+                result = evalBinary<double, double, double>(binary, fmodf);
                 break;
             case binding::BinaryOperatorType::Equal:
                 if (binary->left->type() == binding::Type::Number) {
-                    result = Evaluator::evalBinary<double, double, bool>(binary, std::equal_to<>{});
+                    result = evalBinary<double, double, bool>(binary, std::equal_to<>{});
                 } else if (binary->left->type() == binding::Type::Bool) {
-                    result = Evaluator::evalBinary<bool, bool, bool>(binary, std::equal_to<>{});
+                    result = evalBinary<bool, bool, bool>(binary, std::equal_to<>{});
                 }
                 break;
             case binding::BinaryOperatorType::NotEqual:
                 if (binary->left->type() == binding::Type::Number) {
-                    result = Evaluator::evalBinary<double, double, bool>(binary, std::not_equal_to<>{});
+                    result = evalBinary<double, double, bool>(binary, std::not_equal_to<>{});
                 } else if (binary->left->type() == binding::Type::Bool) {
-                    result = Evaluator::evalBinary<bool, bool, bool>(binary, std::not_equal_to<>{});
+                    result = evalBinary<bool, bool, bool>(binary, std::not_equal_to<>{});
                 }
             default:
                 break;
