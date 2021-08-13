@@ -32,6 +32,11 @@ std::any collage::runtime::Evaluator::evalExpression(binding::BoundExpression &s
             case binding::BinaryOperatorType::RightShift:
                 result = evalBinary(binary, [&](long long ll1, long long ll2) { return ll1 >> ll2; });
                 break;
+            case binding::BinaryOperatorType::UnsignedRightShift:
+                result = evalBinary(binary, [&](long long ll1, long long ll2) {
+                    return ((unsigned long) ll1) >> ll2;
+                });
+                break;
             case binding::BinaryOperatorType::LeftShift:
                 result = evalBinary(binary, [&](long long ll1, long long ll2) { return ll1 << ll2; });
                 break;
@@ -71,8 +76,14 @@ std::any collage::runtime::Evaluator::evalExpression(binding::BoundExpression &s
             case binding::BinaryOperatorType::Multiplication:
                 result = evalBinary<double, double, double>(binary, std::multiplies<>{});
                 break;
+            case binding::BinaryOperatorType::Exponent:
+                result = evalBinary<double, double, double>(binary, pow);
+                break;
             case binding::BinaryOperatorType::Division:
                 result = evalBinary<double, double, double>(binary, std::divides<>{});
+                break;
+            case binding::BinaryOperatorType::FloorDivision:
+                result = floor(std::any_cast<double>(evalBinary<double, double, double>(binary, fmod)));
                 break;
             case binding::BinaryOperatorType::Modulus:
                 result = evalBinary<double, double, double>(binary, fmodf);

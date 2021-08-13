@@ -15,6 +15,7 @@ namespace collage::syntax {
         DoubleEqual,
         BangEqual,
         DoubleGreaterThan,
+        TripleGreaterThan,
         GreaterThan,
         GreaterEqualThan,
         DoubleLessThan,
@@ -30,7 +31,9 @@ namespace collage::syntax {
         Plus,
         Minus,
         Star,
+        DoubleStar,
         Slash,
+        DoubleSlash,
         Percent,
     };
 
@@ -74,8 +77,11 @@ namespace collage::syntax {
                 return 9;
             case TokenType::Star:
             case TokenType::Slash:
+            case TokenType::DoubleSlash:
             case TokenType::Percent:
                 return 10;
+            case TokenType::DoubleStar:
+                return 12;
             default:
                 return 0;
         };

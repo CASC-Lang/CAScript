@@ -35,8 +35,13 @@ std::vector<syntax::Token> syntax::Lexer::lex() {
                 break;
             case '>':
                 if (source[pos + 1] == '>') {
-                    tokens.emplace_back(TokenType::DoubleGreaterThan, source.substr(pos, pos + 2));
-                    pos += 2;
+                    if (source[pos + 2] == '>') {
+                        tokens.emplace_back(TokenType::TripleGreaterThan, source.substr(pos, pos + 3));
+                        pos += 3;
+                    } else {
+                        tokens.emplace_back(TokenType::DoubleGreaterThan, source.substr(pos, pos + 2));
+                        pos += 2;
+                    }
                 } else if (source[pos + 1] == '=') {
                     tokens.emplace_back(TokenType::GreaterEqualThan, source.substr(pos, pos + 2));
                 } else {
@@ -82,10 +87,20 @@ std::vector<syntax::Token> syntax::Lexer::lex() {
                 tokens.emplace_back(TokenType::Minus, source[pos++]);
                 break;
             case '*':
-                tokens.emplace_back(TokenType::Star, source[pos++]);
+                if (source[pos + 1] == '*') {
+                    tokens.emplace_back(TokenType::DoubleStar, source.substr(pos, pos + 2));
+                    pos += 2;
+                } else {
+                    tokens.emplace_back(TokenType::Star, source[pos++]);
+                }
                 break;
             case '/':
-                tokens.emplace_back(TokenType::Slash, source[pos++]);
+                if (source[pos + 1] == '/') {
+                    tokens.emplace_back(TokenType::DoubleSlash, source.substr(pos, pos + 2));
+                    pos += 2;
+                } else {
+                    tokens.emplace_back(TokenType::Slash, source[pos++]);
+                }
                 break;
             case '%':
                 tokens.emplace_back(TokenType::Percent, source[pos++]);
