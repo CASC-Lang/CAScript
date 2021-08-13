@@ -67,6 +67,17 @@ std::any collage::runtime::Evaluator::evalExpression(binding::BoundExpression &s
             case binding::BinaryOperatorType::LessEqual:
                 result = evalBinary<double, double, bool>(binary, std::less_equal<>{});
                 break;
+            case binding::BinaryOperatorType::ThreeWayComparison:
+                result = evalBinary<double, double, double>(binary, [&](double d1, double d2) {
+                    if (d1 == d2) {
+                        return 0;
+                    } else if (d1 > d2) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                });
+                break;
             case binding::BinaryOperatorType::Addition:
                 result = evalBinary<double, double, double>(binary, std::plus<>{});
                 break;

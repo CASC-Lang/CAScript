@@ -28,6 +28,7 @@ namespace collage::binding {
         GreaterEqual,
         Less,
         LessEqual,
+        ThreeWayComparison,
     };
 }
 

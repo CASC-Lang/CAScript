@@ -53,7 +53,13 @@ std::vector<syntax::Token> syntax::Lexer::lex() {
                     tokens.emplace_back(TokenType::DoubleLessThan, source.substr(pos, pos + 2));
                     pos += 2;
                 } else if (source[pos + 1] == '=') {
-                    tokens.emplace_back(TokenType::LessEqualThan, source.substr(pos, pos + 2));
+                    if (source[pos + 2] == '>') {
+                        tokens.emplace_back(TokenType::LessEqualGreater, source.substr(pos, pos + 3));
+                        pos += 3;
+                    } else {
+                        tokens.emplace_back(TokenType::LessEqualThan, source.substr(pos, pos + 2));
+                        pos += 2;
+                    }
                 } else {
                     tokens.emplace_back(TokenType::LessThan, source[pos++]);
                 }

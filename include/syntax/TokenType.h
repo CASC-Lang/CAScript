@@ -21,6 +21,7 @@ namespace collage::syntax {
         DoubleLessThan,
         LessThan,
         LessEqualThan,
+        LessEqualGreater,
         DoubleAmpersand,
         Ampersand,
         Caret,
@@ -43,7 +44,7 @@ namespace collage::syntax {
             case TokenType::Bang:
             case TokenType::Plus:
             case TokenType::Minus:
-                return 11;
+                return 12;
             default:
                 return 0;
         }
@@ -69,19 +70,21 @@ namespace collage::syntax {
             case TokenType::LessThan:
             case TokenType::LessEqualThan:
                 return 7;
+            case TokenType::LessEqualGreater:
+                return 8;
             case TokenType::DoubleGreaterThan:
             case TokenType::DoubleLessThan:
-                return 8;
+                return 9;
             case TokenType::Plus:
             case TokenType::Minus:
-                return 9;
+                return 10;
             case TokenType::Star:
             case TokenType::Slash:
             case TokenType::DoubleSlash:
             case TokenType::Percent:
-                return 10;
+                return 11;
             case TokenType::DoubleStar:
-                return 12;
+                return 13;
             default:
                 return 0;
         };

@@ -51,6 +51,7 @@ namespace collage::binding {
             BoundBinaryOperator(syntax::TokenType::GreaterEqualThan, BinaryOperatorType::GreaterEqual, Type::Number, Type::Bool),
             BoundBinaryOperator(syntax::TokenType::LessThan, BinaryOperatorType::Less, Type::Number, Type::Bool),
             BoundBinaryOperator(syntax::TokenType::LessEqualThan, BinaryOperatorType::LessEqual, Type::Number, Type::Bool),
+            BoundBinaryOperator(syntax::TokenType::LessEqualGreater, BinaryOperatorType::ThreeWayComparison, Type::Number),
     };
 
     static const BoundBinaryOperator *bind(syntax::TokenType type, Type left_type, Type right_type) {
