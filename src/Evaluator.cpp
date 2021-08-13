@@ -69,12 +69,15 @@ std::any collage::runtime::Evaluator::evalExpression(binding::BoundExpression &s
                 break;
             case binding::BinaryOperatorType::ThreeWayComparison:
                 result = evalBinary<double, double, double>(binary, [&](double d1, double d2) {
-                    if (d1 == d2) {
+                    auto cmp_result = d1 <=> d2;
+                    if (is_lt(cmp_result)) {
+                        return -1;
+                    } else if (is_eq(cmp_result)) {
                         return 0;
-                    } else if (d1 > d2) {
+                    } else if (is_gt(cmp_result)) {
                         return 1;
                     } else {
-                        return -1;
+                        return 0;
                     }
                 });
                 break;
