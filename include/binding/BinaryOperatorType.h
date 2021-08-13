@@ -12,7 +12,13 @@ namespace collage::binding {
         Multiplication,
         Division,
         Modulus,
-        Equal
+        Equal,
+        NotEqual,
+        LeftShift,
+        RightShift,
+        BitwiseAnd,
+        BitwiseExclusiveOr,
+        BitwiseInclusiveOr,
     };
 }
 

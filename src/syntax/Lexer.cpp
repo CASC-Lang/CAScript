@@ -21,11 +21,46 @@ std::vector<syntax::Token> syntax::Lexer::lex() {
                 if (source[pos + 1] == '=') {
                     tokens.emplace_back(TokenType::DoubleEqual, source.substr(pos, pos + 2));
                     pos += 2;
-                    break;
                 } else {
                     pos++;
-                    break;
                 }
+                break;
+            case '!':
+                if (source[pos + 1] == '=') {
+                    tokens.emplace_back(TokenType::BangEqual, source.substr(pos, pos + 2));
+                    pos += 2;
+                } else {
+                    tokens.emplace_back(TokenType::Bang, source[pos++]);
+                }
+                break;
+            case '>':
+                if (source[pos + 1] == '>') {
+                    tokens.emplace_back(TokenType::DoubleGreaterThan, source.substr(pos, pos + 2));
+                    pos += 2;
+                } else {
+                    pos++;
+                }
+                break;
+            case '<':
+                if (source[pos + 1] == '<') {
+                    tokens.emplace_back(TokenType::DoubleLessThan, source.substr(pos, pos + 2));
+                    pos += 2;
+                } else {
+                    pos++;
+                }
+                break;
+            case '&':
+                tokens.emplace_back(TokenType::Ampersand, source[pos++]);
+                break;
+            case '^':
+                tokens.emplace_back(TokenType::Caret, source[pos++]);
+                break;
+            case '|':
+                tokens.emplace_back(TokenType::Pipe, source[pos++]);
+                break;
+            case '~':
+                tokens.emplace_back(TokenType::Tilde, source[pos++]);
+                break;
             case '+':
                 tokens.emplace_back(TokenType::Plus, source[pos++]);
                 break;
@@ -56,7 +91,9 @@ std::vector<syntax::Token> syntax::Lexer::lex() {
 
                     auto len = pos - start;
                     auto literal = source.substr(start, len);
-                    tokens.emplace_back(literal == "true" || literal == "false" ? TokenType::BoolLiteral : TokenType::Identifier, literal);
+                    tokens.emplace_back(
+                            literal == "true" || literal == "false" ? TokenType::BoolLiteral : TokenType::Identifier,
+                            literal);
                 } else if (std::isdigit(source[pos])) {
                     auto start = pos;
                     while (std::isdigit(source[pos]) || source[pos] == '.') {

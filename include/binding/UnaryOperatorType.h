@@ -8,7 +8,9 @@
 namespace collage::binding {
     enum class UnaryOperatorType {
         Identity,
-        Negation
+        Negation,
+        LogicalNot,
+        Complement,
     };
 }
 

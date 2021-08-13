@@ -13,6 +13,14 @@ namespace collage::syntax {
         OpenParenthesis,
         CloseParenthesis,
         DoubleEqual,
+        BangEqual,
+        DoubleGreaterThan,
+        DoubleLessThan,
+        Ampersand,
+        Caret,
+        Pipe,
+        Bang,
+        Tilde,
         Plus,
         Minus,
         Star,
@@ -22,6 +30,8 @@ namespace collage::syntax {
 
     constexpr unsigned unary_precedence(TokenType token) {
         switch (token) {
+            case TokenType::Tilde:
+            case TokenType::Bang:
             case TokenType::Plus:
             case TokenType::Minus:
                 return 4;
@@ -33,6 +43,7 @@ namespace collage::syntax {
     constexpr unsigned binary_precedence(TokenType token) {
         switch (token) {
             case TokenType::DoubleEqual:
+            case TokenType::BangEqual:
                 return 1;
             case TokenType::Plus:
             case TokenType::Minus:

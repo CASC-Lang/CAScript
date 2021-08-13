@@ -24,6 +24,8 @@ namespace collage::binding {
     static const BoundUnaryOperator unary_ops[] = {
             BoundUnaryOperator(syntax::TokenType::Plus, UnaryOperatorType::Identity, Type::Number),
             BoundUnaryOperator(syntax::TokenType::Minus, UnaryOperatorType::Negation, Type::Number),
+            BoundUnaryOperator(syntax::TokenType::Bang, UnaryOperatorType::LogicalNot, Type::Bool),
+            BoundUnaryOperator(syntax::TokenType::Tilde, UnaryOperatorType::Complement, Type::Number),
     };
 
     static const BoundUnaryOperator *bind(syntax::TokenType type, Type operand_type) {

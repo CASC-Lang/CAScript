@@ -34,7 +34,14 @@ namespace collage::binding {
             BoundBinaryOperator(syntax::TokenType::Slash, BinaryOperatorType::Division, Type::Number),
             BoundBinaryOperator(syntax::TokenType::Percent, BinaryOperatorType::Modulus, Type::Number),
             BoundBinaryOperator(syntax::TokenType::DoubleEqual, BinaryOperatorType::Equal, Type::Number, Type::Bool),
-            BoundBinaryOperator(syntax::TokenType::DoubleEqual, BinaryOperatorType::Equal, Type::Bool)
+            BoundBinaryOperator(syntax::TokenType::DoubleEqual, BinaryOperatorType::Equal, Type::Bool),
+            BoundBinaryOperator(syntax::TokenType::BangEqual, BinaryOperatorType::NotEqual, Type::Number, Type::Bool),
+            BoundBinaryOperator(syntax::TokenType::BangEqual, BinaryOperatorType::NotEqual, Type::Bool),
+            BoundBinaryOperator(syntax::TokenType::DoubleGreaterThan, BinaryOperatorType::RightShift, Type::Number),
+            BoundBinaryOperator(syntax::TokenType::DoubleLessThan, BinaryOperatorType::RightShift, Type::Number),
+            BoundBinaryOperator(syntax::TokenType::Ampersand, BinaryOperatorType::BitwiseAnd, Type::Number),
+            BoundBinaryOperator(syntax::TokenType::Caret, BinaryOperatorType::BitwiseExclusiveOr, Type::Number),
+            BoundBinaryOperator(syntax::TokenType::Pipe, BinaryOperatorType::BitwiseInclusiveOr, Type::Number),
     };
 
     static const BoundBinaryOperator *bind(syntax::TokenType type, Type left_type, Type right_type) {

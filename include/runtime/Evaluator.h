@@ -9,7 +9,7 @@
 #include <functional>
 #include <binding/BoundUnaryExpression.h>
 #include <binding/BoundBinaryExpression.h>
-#include "binding/BoundExpression.h"
+#include <binding/BoundExpression.h>
 
 namespace collage::runtime {
     class Evaluator {
@@ -28,8 +28,22 @@ namespace collage::runtime {
         template<class E, class V>
         std::any evalUnary(binding::BoundUnaryExpression *unary, std::function<V(E)> func) const;
 
+        std::any evalUnary(binding::BoundUnaryExpression *unary,
+                                                 std::function<long long(long long)> func) const {
+            return (double) func(static_cast<long long>(std::any_cast<double>(evalExpression(*unary->expression))));
+        };
+
         template<class L, class R, class V>
         std::any evalBinary(binding::BoundBinaryExpression *binary, std::function<V(L, R)> func) const;
+
+        std::any
+        evalBinary(binding::BoundBinaryExpression *binary,
+                                         std::function<long long(long long, long long)> func) const {
+            auto evaluated_left = static_cast<long long>(any_cast<double>(evalExpression(*binary->left)));
+            auto evaluated_right = static_cast<long long>(any_cast<double>(evalExpression(*binary->right)));
+
+            return (double) func(evaluated_left, evaluated_right);
+        };
     };
 }
 

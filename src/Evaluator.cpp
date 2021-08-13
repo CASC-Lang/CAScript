@@ -4,7 +4,6 @@
 
 #include <cmath>
 #include <binding/BoundLiteralExpression.h>
-#include "runtime/Cast.h"
 #include "runtime/Evaluator.h"
 
 std::any collage::runtime::Evaluator::evalExpression(binding::BoundExpression &syntax) const {
@@ -15,16 +14,36 @@ std::any collage::runtime::Evaluator::evalExpression(binding::BoundExpression &s
     } else if (auto *unary = dynamic_cast<binding::BoundUnaryExpression *>(&syntax)) {
         switch (unary->unary_operator.operator_type) {
             case binding::UnaryOperatorType::Identity:
-                result = Evaluator::evalUnary<double, double>(unary, [&](double e) { return e; });
+                result = Evaluator::evalUnary<double, double>(unary, std::identity{});
                 break;
             case binding::UnaryOperatorType::Negation:
                 result = Evaluator::evalUnary<double, double>(unary, std::negate<>{});
                 break;
+            case binding::UnaryOperatorType::LogicalNot:
+                result = Evaluator::evalUnary<bool, bool>(unary, std::logical_not<>{});
+                break;
+            case binding::UnaryOperatorType::Complement:
+                result = Evaluator::evalUnary(unary, std::bit_not<>{});
             default:
                 break;
         }
     } else if (auto *binary = dynamic_cast<binding::BoundBinaryExpression *>(&syntax)) {
         switch (binary->binary_operator.operator_type) {
+            case binding::BinaryOperatorType::RightShift:
+                result = evalBinary(binary, [&](long long ll1, long long ll2) { return ll1 >> ll2; });
+                break;
+            case binding::BinaryOperatorType::LeftShift:
+                result = evalBinary(binary, [&](long long ll1, long long ll2) { return ll1 << ll2; });
+                break;
+            case binding::BinaryOperatorType::BitwiseAnd:
+                result = evalBinary(binary, std::bit_and<>{});
+                break;
+            case binding::BinaryOperatorType::BitwiseExclusiveOr:
+                result = evalBinary(binary, std::bit_xor<>{});
+                break;
+            case binding::BinaryOperatorType::BitwiseInclusiveOr:
+                result = evalBinary(binary, std::bit_or<>{});
+                break;
             case binding::BinaryOperatorType::Addition:
                 result = Evaluator::evalBinary<double, double, double>(binary, std::plus<>{});
                 break;
@@ -47,6 +66,12 @@ std::any collage::runtime::Evaluator::evalExpression(binding::BoundExpression &s
                     result = Evaluator::evalBinary<bool, bool, bool>(binary, std::equal_to<>{});
                 }
                 break;
+            case binding::BinaryOperatorType::NotEqual:
+                if (binary->left->type() == binding::Type::Number) {
+                    result = Evaluator::evalBinary<double, double, bool>(binary, std::not_equal_to<>{});
+                } else if (binary->left->type() == binding::Type::Bool) {
+                    result = Evaluator::evalBinary<bool, bool, bool>(binary, std::not_equal_to<>{});
+                }
             default:
                 break;
         }
