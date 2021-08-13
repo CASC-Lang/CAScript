@@ -4,6 +4,7 @@
 
 #include <cmath>
 #include <binding/BoundLiteralExpression.h>
+#include <binding/BoundTernaryExpression.h>
 #include "runtime/Evaluator.h"
 
 std::any collage::runtime::Evaluator::evalExpression(binding::BoundExpression &syntax) const {
@@ -116,6 +117,16 @@ std::any collage::runtime::Evaluator::evalExpression(binding::BoundExpression &s
                     result = evalBinary<bool, bool, bool>(binary, std::not_equal_to<>{});
                 }
             default:
+                break;
+        }
+    } else if (auto *ternary = dynamic_cast<binding::BoundTernaryExpression *>(&syntax)) {
+        switch (ternary->operators.operator_type) {
+            case binding::TernaryOperatorType::Conditional:
+                auto left = std::any_cast<bool>(evalExpression(*ternary->left));
+                auto center = evalExpression(*ternary->center);
+                auto right = evalExpression(*ternary->right);
+
+                result = left ? center : right;
                 break;
         }
     }

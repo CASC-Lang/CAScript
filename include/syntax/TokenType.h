@@ -12,6 +12,8 @@ namespace collage::syntax {
         NumberLiteral,
         OpenParenthesis,
         CloseParenthesis,
+        QuestionMark,
+        Colon,
         DoubleEqual,
         BangEqual,
         DoubleGreaterThan,
@@ -44,7 +46,7 @@ namespace collage::syntax {
             case TokenType::Bang:
             case TokenType::Plus:
             case TokenType::Minus:
-                return 12;
+                return 13;
             default:
                 return 0;
         }
@@ -52,39 +54,41 @@ namespace collage::syntax {
 
     constexpr unsigned binary_precedence(TokenType token) {
         switch (token) {
-            case TokenType::DoublePipe:
+            case TokenType::QuestionMark:
                 return 1;
-            case TokenType::DoubleAmpersand:
+            case TokenType::DoublePipe:
                 return 2;
-            case TokenType::Pipe:
+            case TokenType::DoubleAmpersand:
                 return 3;
-            case TokenType::Caret:
+            case TokenType::Pipe:
                 return 4;
-            case TokenType::Ampersand:
+            case TokenType::Caret:
                 return 5;
+            case TokenType::Ampersand:
+                return 6;
             case TokenType::DoubleEqual:
             case TokenType::BangEqual:
-                return 6;
+                return 7;
             case TokenType::GreaterThan:
             case TokenType::GreaterEqualThan:
             case TokenType::LessThan:
             case TokenType::LessEqualThan:
-                return 7;
-            case TokenType::LessEqualGreater:
                 return 8;
+            case TokenType::LessEqualGreater:
+                return 9;
             case TokenType::DoubleGreaterThan:
             case TokenType::DoubleLessThan:
-                return 9;
+                return 10;
             case TokenType::Plus:
             case TokenType::Minus:
-                return 10;
+                return 11;
             case TokenType::Star:
             case TokenType::Slash:
             case TokenType::DoubleSlash:
             case TokenType::Percent:
-                return 11;
+                return 12;
             case TokenType::DoubleStar:
-                return 13;
+                return 14;
             default:
                 return 0;
         };

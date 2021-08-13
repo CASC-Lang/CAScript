@@ -8,7 +8,6 @@
 #include "Token.h"
 #include "ExpressionSyntax.h"
 
-#include <utility>
 #include <memory>
 
 namespace collage::syntax {

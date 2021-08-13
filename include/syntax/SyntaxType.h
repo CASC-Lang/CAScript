@@ -13,6 +13,7 @@ namespace collage::syntax {
         Parenthesized,
         Unary,
         Binary,
+        Ternary
     };
 }
 

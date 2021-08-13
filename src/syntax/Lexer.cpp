@@ -17,6 +17,12 @@ std::vector<syntax::Token> syntax::Lexer::lex() {
             case ')':
                 tokens.emplace_back(TokenType::CloseParenthesis, source[pos++]);
                 break;
+            case '?':
+                tokens.emplace_back(TokenType::QuestionMark, source[pos++]);
+                break;
+            case ':':
+                tokens.emplace_back(TokenType::Colon, source[pos++]);
+                break;
             case '=':
                 if (source[pos + 1] == '=') {
                     tokens.emplace_back(TokenType::DoubleEqual, source.substr(pos, pos + 2));

@@ -8,6 +8,7 @@
 #include <memory>
 #include <syntax/IdentifierExpression.h>
 #include <syntax/UnaryExpression.h>
+#include <syntax/TernaryExpression.h>
 #include <syntax/ParenthesizedExpression.h>
 
 using namespace collage;
@@ -55,9 +56,27 @@ std::unique_ptr<syntax::ExpressionSyntax> syntax::Parser::parseExpression(unsign
 
         if (precedence == 0 || precedence <= parent_precedence) break;
 
+        if (precedence == 1) {
+            const auto &question_mark_token = match(TokenType::QuestionMark);
+            auto center = parseExpression();
+            const auto &colon_token = match(TokenType::Colon);
+            auto right = parseExpression();
+
+            left = std::make_unique<syntax::TernaryExpression>(
+                    TernaryExpression(std::move(left),
+                                      question_mark_token,
+                                      std::move(center),
+                                      colon_token,
+                                      std::move(right))
+            );
+            continue;
+        }
+
         const auto &operator_token = next();
         auto right = parseExpression(precedence);
-        left = std::make_unique<syntax::BinaryExpression>(BinaryExpression(std::move(left), operator_token, std::move(right)));
+        left = std::make_unique<syntax::BinaryExpression>(
+                BinaryExpression(std::move(left), operator_token, std::move(right))
+        );
     }
 
     return left;
@@ -69,7 +88,8 @@ std::unique_ptr<syntax::ExpressionSyntax> syntax::Parser::parsePrimaryExpression
             const auto &open_parenthesis_token = match(TokenType::OpenParenthesis);
             auto expression = parseExpression();
             const auto &close_parenthesis_token = match(TokenType::CloseParenthesis);
-            return std::make_unique<syntax::ParenthesizedExpression>(ParenthesizedExpression(open_parenthesis_token, std::move(expression), close_parenthesis_token));
+            return std::make_unique<syntax::ParenthesizedExpression>(
+                    ParenthesizedExpression(open_parenthesis_token, std::move(expression), close_parenthesis_token));
         }
         case TokenType::NumberLiteral: {
             const auto &number_token = match(TokenType::NumberLiteral);

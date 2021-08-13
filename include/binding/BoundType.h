@@ -9,7 +9,8 @@ namespace collage::binding {
     enum class BoundType{
         Literal,
         Unary,
-        Binary
+        Binary,
+        Ternary
     };
 }
 

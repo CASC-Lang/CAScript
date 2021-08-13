@@ -5,13 +5,13 @@
 #include <sstream>
 #include <binding/BoundBinaryOperator.h>
 #include <binding/BoundBinaryExpression.h>
+#include <binding/BoundLiteralExpression.h>
+#include <binding/BoundUnaryExpression.h>
+#include <binding/BoundTernaryExpression.h>
 #include <syntax/ParenthesizedExpression.h>
 
-#include "binding/BoundLiteralExpression.h"
-#include "binding/BoundExpression.h"
-#include "binding/BoundUnaryExpression.h"
-#include "binding/BoundUnaryOperator.h"
 #include "binding/Binder.h"
+
 
 std::unique_ptr<collage::binding::BoundExpression>
 collage::binding::Binder::bindExpression(std::unique_ptr<syntax::ExpressionSyntax> expression) {
@@ -21,9 +21,11 @@ collage::binding::Binder::bindExpression(std::unique_ptr<syntax::ExpressionSynta
         return bindUnaryExpression(*unary);
     } else if (auto binary = dynamic_cast<syntax::BinaryExpression *>(expression.get())) {
         return bindBinaryExpression(*binary);
-    } else if (auto parenthesized = dynamic_cast<syntax::ParenthesizedExpression *>(expression.get()))
+    } else if (auto ternary = dynamic_cast<syntax::TernaryExpression *>(expression.get())) {
+        return bindTernaryExpression(*ternary);
+    } else if (auto parenthesized = dynamic_cast<syntax::ParenthesizedExpression *>(expression.get())) {
         return bindExpression(std::move((*parenthesized).expression));
-    else {
+    } else {
         return std::make_unique<binding::BoundLiteralExpression>(nullptr, Type::Unidentified);
     }
 }
@@ -68,4 +70,19 @@ collage::binding::Binder::bindBinaryExpression(collage::syntax::BinaryExpression
     auto operator_type = bind(expression.operator_token.type, left->type(), right->type());
 
     return std::make_unique<BoundBinaryExpression>(*operator_type, std::move(left), std::move(right));
+}
+
+std::unique_ptr<collage::binding::BoundExpression>
+collage::binding::Binder::bindTernaryExpression(syntax::TernaryExpression &expression) {
+    auto left = bindExpression(std::move(expression.left));
+    auto center = bindExpression(std::move(expression.center));
+    auto right = bindExpression(std::move(expression.right));
+    auto token_types = new syntax::TokenType[2]{expression.left_operator_token.type,
+                                                expression.right_operator_token.type};
+    auto operator_type = bind(token_types, left->type(),
+                              center->type(), right->type());
+
+    delete[] token_types;
+
+    return std::make_unique<BoundTernaryExpression>(*operator_type, std::move(left), std::move(center), std::move(right));
 }
