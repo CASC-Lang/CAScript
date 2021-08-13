@@ -7,7 +7,7 @@
 
 #include "BoundType.h"
 
-namespace collage::binding {
+namespace cascript::binding {
     class BoundNode {
     public:
         BoundNode() = default;

@@ -14,7 +14,7 @@
 #include "TokenType.h"
 #include "SyntaxNode.h"
 
-namespace collage::syntax {
+namespace cascript::syntax {
     struct Token : public SyntaxNode {
         Token(TokenType type, char literal) : type(type), literal(1, literal) {}
 

@@ -5,7 +5,7 @@
 #ifndef COLLAGE_CPP_BINARYOPERATORTYPE_H
 #define COLLAGE_CPP_BINARYOPERATORTYPE_H
 
-namespace collage::binding {
+namespace cascript::binding {
     enum class BinaryOperatorType {
         Addition,
         Minus,

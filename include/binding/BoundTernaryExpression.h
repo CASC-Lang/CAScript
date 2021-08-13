@@ -10,7 +10,7 @@
 #include "BoundExpression.h"
 #include "BoundTernaryOperator.h"
 
-namespace collage::binding {
+namespace cascript::binding {
     class BoundTernaryExpression : public BoundExpression {
     public:
         BoundTernaryOperator operators;

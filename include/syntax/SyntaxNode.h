@@ -8,7 +8,7 @@
 #include <vector>
 #include "SyntaxType.h"
 
-namespace collage::syntax {
+namespace cascript::syntax {
     class SyntaxNode {
     public:
         SyntaxNode() = default;

@@ -9,7 +9,7 @@
 #include "Token.h"
 #include "ExpressionSyntax.h"
 
-namespace collage::syntax {
+namespace cascript::syntax {
     class TernaryExpression : public ExpressionSyntax {
     public:
         std::unique_ptr<ExpressionSyntax> left;

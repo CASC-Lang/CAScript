@@ -11,7 +11,7 @@
 #include "Token.h"
 #include "ExpressionSyntax.h"
 
-namespace collage::syntax {
+namespace cascript::syntax {
     class UnaryExpression : public ExpressionSyntax {
     public:
         Token operator_token;

@@ -10,7 +10,7 @@
 #include "syntax/TokenType.h"
 #include "TernaryOperatorType.h"
 
-namespace collage::binding {
+namespace cascript::binding {
     struct BoundTernaryOperator {
     public:
         syntax::TokenType types[2];

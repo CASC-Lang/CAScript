@@ -5,7 +5,7 @@
 #include "syntax/Lexer.h"
 #include "syntax/Token.h"
 
-using namespace collage;
+using namespace cascript;
 
 std::vector<syntax::Token> syntax::Lexer::lex() {
     std::vector<Token> tokens;

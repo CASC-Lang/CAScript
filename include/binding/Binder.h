@@ -13,7 +13,7 @@
 #include <syntax/TernaryExpression.h>
 #include "BoundExpression.h"
 
-namespace collage::binding {
+namespace cascript::binding {
     class Binder {
     public:
         std::unique_ptr<BoundExpression> bindExpression(std::unique_ptr<syntax::ExpressionSyntax> expression);

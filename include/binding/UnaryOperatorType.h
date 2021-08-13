@@ -5,7 +5,7 @@
 #ifndef COLLAGE_CPP_UNARYOPERATORTYPE_H
 #define COLLAGE_CPP_UNARYOPERATORTYPE_H
 
-namespace collage::binding {
+namespace cascript::binding {
     enum class UnaryOperatorType {
         Identity,
         Negation,

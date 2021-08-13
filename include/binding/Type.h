@@ -7,7 +7,7 @@
 
 #include <any>
 
-namespace collage::binding {
+namespace cascript::binding {
     enum class Type {
         Unidentified,
         Number,
@@ -19,8 +19,8 @@ namespace collage::binding {
      * @param right should be dynamic type
      * @return if constant type is not specified, return true, else compare and return result.
      */
-    static bool is_or_unspecified(const collage::binding::Type &left, const collage::binding::Type &right) {
-        if (left == collage::binding::Type::Unidentified) return true;
+    static bool is_or_unspecified(const cascript::binding::Type &left, const cascript::binding::Type &right) {
+        if (left == cascript::binding::Type::Unidentified) return true;
         else if (left == right) return true;
         else return false;
     }

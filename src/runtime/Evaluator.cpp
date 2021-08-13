@@ -7,7 +7,7 @@
 #include <binding/BoundTernaryExpression.h>
 #include "runtime/Evaluator.h"
 
-std::any collage::runtime::Evaluator::evalExpression(binding::BoundExpression &syntax) const {
+std::any cascript::runtime::Evaluator::evalExpression(binding::BoundExpression &syntax) const {
     std::any result;
 
     if (auto *literal = dynamic_cast<binding::BoundLiteralExpression *>(&syntax)) {
@@ -92,13 +92,13 @@ std::any collage::runtime::Evaluator::evalExpression(binding::BoundExpression &s
                 result = evalBinary<double, double, double>(binary, std::multiplies<>{});
                 break;
             case binding::BinaryOperatorType::Exponent:
-                result = evalBinary<double, double, double>(binary, pow);
+                result = evalBinary<double, double, double>(binary, static_cast<double(*)(double, double)>(&std::pow));
                 break;
             case binding::BinaryOperatorType::Division:
                 result = evalBinary<double, double, double>(binary, std::divides<>{});
                 break;
             case binding::BinaryOperatorType::FloorDivision:
-                result = floor(std::any_cast<double>(evalBinary<double, double, double>(binary, fmod)));
+                result = floor(std::any_cast<double>(evalBinary<double, double, double>(binary, static_cast<double(*)(double, double)>(&fmod))));
                 break;
             case binding::BinaryOperatorType::Modulus:
                 result = evalBinary<double, double, double>(binary, fmodf);
@@ -136,13 +136,13 @@ std::any collage::runtime::Evaluator::evalExpression(binding::BoundExpression &s
 
 template<class E, class V>
 std::any
-collage::runtime::Evaluator::evalUnary(binding::BoundUnaryExpression *unary, std::function<V(E)> func) const {
+cascript::runtime::Evaluator::evalUnary(binding::BoundUnaryExpression *unary, std::function<V(E)> func) const {
     return func(std::any_cast<E>(evalExpression(*unary->expression)));
 }
 
 template<class L, class R, class V>
 std::any
-collage::runtime::Evaluator::evalBinary(binding::BoundBinaryExpression *binary, std::function<V(L, R)> func) const {
+cascript::runtime::Evaluator::evalBinary(binding::BoundBinaryExpression *binary, std::function<V(L, R)> func) const {
     auto evaluated_left = any_cast<L>(evalExpression(*binary->left));
     auto evaluated_right = any_cast<R>(evalExpression(*binary->right));
 

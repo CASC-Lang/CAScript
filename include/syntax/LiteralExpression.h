@@ -11,7 +11,7 @@
 
 #include <utility>
 
-namespace collage::syntax {
+namespace cascript::syntax {
     class LiteralExpression : public ExpressionSyntax {
     public:
         Token literal_token;

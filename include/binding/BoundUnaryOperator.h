@@ -9,7 +9,7 @@
 #include "UnaryOperatorType.h"
 #include "Type.h"
 
-namespace collage::binding {
+namespace cascript::binding {
     struct BoundUnaryOperator {
     public:
         syntax::TokenType type;

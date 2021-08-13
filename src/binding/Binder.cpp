@@ -13,8 +13,8 @@
 #include "binding/Binder.h"
 
 
-std::unique_ptr<collage::binding::BoundExpression>
-collage::binding::Binder::bindExpression(std::unique_ptr<syntax::ExpressionSyntax> expression) {
+std::unique_ptr<cascript::binding::BoundExpression>
+cascript::binding::Binder::bindExpression(std::unique_ptr<syntax::ExpressionSyntax> expression) {
     if (auto literal = dynamic_cast<syntax::LiteralExpression *>(expression.get())) {
         return bindLiteralExpression(*literal);
     } else if (auto unary = dynamic_cast<syntax::UnaryExpression *>(expression.get())) {
@@ -30,8 +30,8 @@ collage::binding::Binder::bindExpression(std::unique_ptr<syntax::ExpressionSynta
     }
 }
 
-std::unique_ptr<collage::binding::BoundExpression>
-collage::binding::Binder::bindLiteralExpression(syntax::LiteralExpression &expression) {
+std::unique_ptr<cascript::binding::BoundExpression>
+cascript::binding::Binder::bindLiteralExpression(syntax::LiteralExpression &expression) {
     std::any value;
     switch (expression.type) {
         case Type::Unidentified:
@@ -51,8 +51,8 @@ collage::binding::Binder::bindLiteralExpression(syntax::LiteralExpression &expre
 }
 
 
-std::unique_ptr<collage::binding::BoundExpression>
-collage::binding::Binder::bindUnaryExpression(collage::syntax::UnaryExpression &expression) {
+std::unique_ptr<cascript::binding::BoundExpression>
+cascript::binding::Binder::bindUnaryExpression(cascript::syntax::UnaryExpression &expression) {
     auto operand = bindExpression(std::move(expression.expression));
     auto operator_type = bind(expression.operator_token.type, operand->type());
 
@@ -63,8 +63,8 @@ collage::binding::Binder::bindUnaryExpression(collage::syntax::UnaryExpression &
     return std::make_unique<BoundUnaryExpression>(*operator_type, std::move(operand));
 }
 
-std::unique_ptr<collage::binding::BoundExpression>
-collage::binding::Binder::bindBinaryExpression(collage::syntax::BinaryExpression &expression) {
+std::unique_ptr<cascript::binding::BoundExpression>
+cascript::binding::Binder::bindBinaryExpression(cascript::syntax::BinaryExpression &expression) {
     auto left = bindExpression(std::move(expression.left));
     auto right = bindExpression(std::move(expression.right));
     auto operator_type = bind(expression.operator_token.type, left->type(), right->type());
@@ -72,8 +72,8 @@ collage::binding::Binder::bindBinaryExpression(collage::syntax::BinaryExpression
     return std::make_unique<BoundBinaryExpression>(*operator_type, std::move(left), std::move(right));
 }
 
-std::unique_ptr<collage::binding::BoundExpression>
-collage::binding::Binder::bindTernaryExpression(syntax::TernaryExpression &expression) {
+std::unique_ptr<cascript::binding::BoundExpression>
+cascript::binding::Binder::bindTernaryExpression(syntax::TernaryExpression &expression) {
     auto left = bindExpression(std::move(expression.left));
     auto center = bindExpression(std::move(expression.center));
     auto right = bindExpression(std::move(expression.right));

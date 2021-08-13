@@ -12,7 +12,7 @@
 
 #include "Token.h"
 
-namespace collage::syntax {
+namespace cascript::syntax {
     class Lexer {
     private:
         std::string source;
