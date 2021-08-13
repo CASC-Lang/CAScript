@@ -7,6 +7,7 @@ set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++20")
 
 add_subdirectory(thirdparty/magic_enum)
 add_subdirectory(thirdparty/colored)
+add_subdirectory(test test)
 
 file(GLOB_RECURSE SOURCE_FILES
         src/*.c
