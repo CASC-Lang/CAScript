@@ -8,7 +8,7 @@
 #include <any>
 #include "BoundExpression.h"
 
-namespace collage::binding {
+namespace cascript::binding {
     class BoundLiteralExpression : public BoundExpression {
     public:
         std::any value;

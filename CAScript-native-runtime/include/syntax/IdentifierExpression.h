@@ -9,7 +9,7 @@
 #include "SyntaxType.h"
 #include "Token.h"
 
-namespace collage::syntax {
+namespace cascript::syntax {
     class IdentifierExpression : public ExpressionSyntax {
     public:
         Token identifier_token;

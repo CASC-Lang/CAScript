@@ -5,7 +5,7 @@
 #ifndef COLLAGE_CPP_SYNTAXTYPE_H
 #define COLLAGE_CPP_SYNTAXTYPE_H
 
-namespace collage::syntax {
+namespace cascript::syntax {
     enum class SyntaxType {
         Token,
         Id,

@@ -10,7 +10,7 @@
 
 #include <memory>
 
-namespace collage::syntax {
+namespace cascript::syntax {
     class BinaryExpression : public ExpressionSyntax {
     public:
         std::unique_ptr<ExpressionSyntax> left;

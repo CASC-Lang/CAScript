@@ -8,7 +8,7 @@
 #include "Type.h"
 #include "BoundNode.h"
 
-namespace collage::binding {
+namespace cascript::binding {
     class BoundExpression: public BoundNode {
     public:
         BoundExpression() = default;

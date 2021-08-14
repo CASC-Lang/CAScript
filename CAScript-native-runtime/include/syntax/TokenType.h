@@ -5,7 +5,7 @@
 #ifndef COLLAGE_CPP_TOKENTYPE_H
 #define COLLAGE_CPP_TOKENTYPE_H
 
-namespace collage::syntax {
+namespace cascript::syntax {
     enum class TokenType {
         Identifier,
         BoolLiteral,

@@ -16,7 +16,7 @@
 #include <runtime/Evaluator.h>
 #include <binding/Binder.h>
 
-using namespace collage;
+using namespace cascript;
 
 static void printTree(syntax::SyntaxNode *node, std::string indent = "", bool is_last = true);
 

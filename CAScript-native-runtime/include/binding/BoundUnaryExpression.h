@@ -11,7 +11,7 @@
 #include "UnaryOperatorType.h"
 #include "BoundUnaryOperator.h"
 
-namespace collage::binding {
+namespace cascript::binding {
     class BoundUnaryExpression : public BoundExpression {
     public:
         BoundUnaryOperator unary_operator;

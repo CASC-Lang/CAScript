@@ -5,7 +5,7 @@
 #ifndef COLLAGE_CPP_TERNARYOPERATORTYPE_H
 #define COLLAGE_CPP_TERNARYOPERATORTYPE_H
 
-namespace collage::binding {
+namespace cascript::binding {
     enum class TernaryOperatorType {
         Conditional
     };

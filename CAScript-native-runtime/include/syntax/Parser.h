@@ -13,7 +13,7 @@
 #include "Token.h"
 #include "ExpressionSyntax.h"
 
-namespace collage::syntax {
+namespace cascript::syntax {
     class Parser {
     private:
         std::vector<Token> tokens;

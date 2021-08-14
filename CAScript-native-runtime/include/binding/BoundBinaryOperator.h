@@ -9,7 +9,7 @@
 #include "BinaryOperatorType.h"
 #include "Type.h"
 
-namespace collage::binding {
+namespace cascript::binding {
     struct BoundBinaryOperator {
     public:
         syntax::TokenType type;

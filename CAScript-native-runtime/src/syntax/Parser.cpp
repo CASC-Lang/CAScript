@@ -11,7 +11,7 @@
 #include <syntax/TernaryExpression.h>
 #include <syntax/ParenthesizedExpression.h>
 
-using namespace collage;
+using namespace cascript;
 
 syntax::Token syntax::Parser::peek(size_t offset) {
     auto index = pos + offset;

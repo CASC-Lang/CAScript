@@ -10,7 +10,7 @@
 #include "Token.h"
 #include "ExpressionSyntax.h"
 
-namespace collage::syntax {
+namespace cascript::syntax {
     class ParenthesizedExpression : public ExpressionSyntax {
     public:
         Token open_parenthesis;

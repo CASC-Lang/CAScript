@@ -9,7 +9,7 @@
 #include "BoundExpression.h"
 #include "BoundBinaryOperator.h"
 
-namespace collage::binding {
+namespace cascript::binding {
     class BoundBinaryExpression : public BoundExpression {
     public:
         std::unique_ptr<BoundExpression> left;
