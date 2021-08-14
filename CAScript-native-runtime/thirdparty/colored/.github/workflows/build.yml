@@ -1,0 +1,33 @@
+name: Build
+on:
+    pull_request:
+    push:
+        branches: main
+permissions:
+    statuses: write
+    contents: read
+  
+jobs:
+    build-linux:
+        name: Linux
+        runs-on: ubuntu-latest
+        env:
+            CC: clang
+            CFLAGS: -Werror
+        steps:
+            - uses: actions/checkout@v2
+            - name: Configure
+              run: cmake -S .
+            - name: Build
+              run: cmake --build .
+    build-windows:
+        name: Windows
+        runs-on: windows-latest
+        env:
+            CFLAGS: /WX
+        steps:
+            - uses: actions/checkout@v2
+            - name: Configure
+              run: cmake -S . -G "Visual Studio 16 2019"
+            - name: Build
+              run: cmake --build .
