@@ -1,5 +1,3 @@
-import {Token, Type} from "./token";
-
 export class Lexer {
     private readonly source: string;
     private pos = 0;
@@ -119,6 +117,9 @@ export class Lexer {
                         tokens.push(new Token(Type.Slash, this.next()));
                     }
                     break;
+                case "%":
+                    tokens.push(new Token(Type.Percent, this.next()));
+                    break;
                 case " ":
                 case "\t":
                 case "\n":
@@ -138,4 +139,48 @@ export class Lexer {
 
         return tokens;
     }
+}
+
+export class Token {
+    public readonly type: Type;
+    public readonly literal: string;
+
+    constructor(type: Type, literal: string) {
+        this.type = type;
+        this.literal = literal;
+    }
+}
+
+export const enum Type {
+    Identifier,
+    BoolLiteral,
+    NumberLiteral,
+    OpenParenthesis,
+    CloseParenthesis,
+    QuestionMark,
+    Colon,
+    DoubleEqual,
+    BangEqual,
+    DoubleGreaterThan,
+    TripleGreaterThan,
+    GreaterThan,
+    GreaterEqualThan,
+    DoubleLessThan,
+    LessThan,
+    LessEqualThan,
+    LessEqualGreater,
+    DoubleAmpersand,
+    Ampersand,
+    Caret,
+    DoublePipe,
+    Pipe,
+    Bang,
+    Tilde,
+    Plus,
+    Minus,
+    Star,
+    DoubleStar,
+    Slash,
+    DoubleSlash,
+    Percent,
 }
