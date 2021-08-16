@@ -76,6 +76,7 @@ namespace cascript::syntax {
                 return 8;
             case TokenType::LessEqualGreater:
                 return 9;
+            case TokenType::TripleGreaterThan:
             case TokenType::DoubleGreaterThan:
             case TokenType::DoubleLessThan:
                 return 10;
