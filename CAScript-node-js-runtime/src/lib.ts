@@ -1,12 +1,12 @@
 import * as fs from "fs";
-import {CAScript} from "./syntax/Parser";
-import Parser = CAScript.Parser;
+import {Emitter} from "./emit/Emitter";
 
 let file_path = process.argv[2]
 
 let data = fs.readFileSync(file_path, "utf-8");
 
-let parser = new Parser(data);
-let result = parser.parse();
+let emitter = new Emitter(data);
+let result = emitter.emitJs();
 
 console.log(result);
+console.log(eval(result).toString());
