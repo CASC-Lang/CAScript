@@ -28,6 +28,5 @@ jobs:
       if: success() || failure()
       with:
           name: Mocha Tests
-          artifact: test-results
-          path: '*.xml'
+          path: test-results.json
           reporter: mocha-json

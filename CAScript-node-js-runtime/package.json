@@ -6,7 +6,7 @@
   "scripts": {
     "watch:debug": "nodemon --inspect=5858 -e ts,tsx --exec node -r ts-node/register ./src/lib.ts repl",
     "eslint": "eslint src test --ext .ts",
-    "test": "mocha -r ts-node/register test/**/*.ts"
+    "test": "mocha -r ts-node/register test/**/*.ts --reporter json > test-results.json"
   },
   "keywords": [],
   "author": "",
