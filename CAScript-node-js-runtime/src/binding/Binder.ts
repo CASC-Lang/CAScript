@@ -1,4 +1,6 @@
+import { abort } from "process";
 import { threadId } from "worker_threads";
+import { DiagnosticHandler } from "../diagnostic";
 import {
     BinaryExpression,
     ExpressionSyntax,
@@ -12,6 +14,7 @@ import {
 } from "../syntax/Parser";
 
 export class Binder {
+    public readonly diagnosticHandler: DiagnosticHandler = new DiagnosticHandler();
     private readonly root: ExpressionSyntax;
 
     constructor(source: string) {
@@ -56,7 +59,8 @@ export class Binder {
         if (operator) {
             return new BoundUnaryExpression(operator, operand);
         } else {
-            throw new Error("Unknown operator");
+            this.diagnosticHandler.reportUnaryTypeMismatch(expression.operator.span, expression.operator.literal, operand.type());
+            return new BoundErrorExpression();
         }
     }
 
@@ -90,6 +94,7 @@ export abstract class BoundNode {
 }
 
 export const enum BoundType {
+    ERROR,
     Literal,
     Identifier,
     Parenthesized,
@@ -99,12 +104,23 @@ export const enum BoundType {
 }
 
 export const enum Type {
-    Bool,
-    Number
+    Undefined = "undefined",
+    Bool = "bool",
+    Number = "number"
 }
 
 export abstract class BoundExpression extends BoundNode {
     public abstract type(): Type;
+}
+
+export class BoundErrorExpression extends BoundExpression {
+    public boundType(): BoundType {
+        return BoundType.ERROR;
+    }
+    
+    public type(): Type {
+        return Type.Undefined;
+    }
 }
 
 export class BoundLiteralExpression extends BoundExpression {

@@ -10,17 +10,22 @@ import {
     BoundUnaryExpression,
     UnaryOperatorType
 } from "../binding/Binder";
-import { UnaryExpression } from "../syntax/Parser";
+import { DiagnosticHandler } from "../diagnostic";
 
 export class Emitter {
-    public root: BoundExpression;
+    public readonly diagnosticHandler: DiagnosticHandler
+    public readonly root: BoundExpression;
 
     constructor(source: string) {
-        this.root = new Binder(source).bind();
+        let binder = new Binder(source);
+
+        this.root = binder.bind();
+        this.diagnosticHandler = binder.diagnosticHandler;
     }
 
     public emitJs(): string {
-        return JsEmitter.emit(this.root);
+        if (this.diagnosticHandler.diagnostics.length !== 0) return "";
+        else return JsEmitter.emit(this.root);
     }
 }
 

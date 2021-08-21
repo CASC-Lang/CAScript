@@ -1,3 +1,6 @@
+import { start } from "repl";
+import { TextSpan } from "../diagnostic";
+
 class Lexer {
     private readonly source: string;
     private pos = 0;
@@ -25,27 +28,27 @@ class Lexer {
         while (this.pos < this.source.length) {
             switch (this.source[this.pos]) {
                 case "(":
-                    tokens.push(new Token(TokenType.OpenParenthesis, this.next()));
+                    tokens.push(new Token(TokenType.OpenParenthesis, this.pos, this.next()));
                     break;
                 case ")":
-                    tokens.push(new Token(TokenType.CloseParenthesis, this.next()));
+                    tokens.push(new Token(TokenType.CloseParenthesis, this.pos, this.next()));
                     break;
                 case "?":
-                    tokens.push(new Token(TokenType.QuestionMark, this.next()));
+                    tokens.push(new Token(TokenType.QuestionMark, this.pos, this.next()));
                     break;
                 case ":":
-                    tokens.push(new Token(TokenType.Colon, this.next()));
+                    tokens.push(new Token(TokenType.Colon, this.pos, this.next()));
                     break;
                 case "=":
                     if (this.peek(1) === "=") {
-                        tokens.push(new Token(TokenType.DoubleEqual, this.next(2)));
+                        tokens.push(new Token(TokenType.DoubleEqual, this.pos, this.next(2)));
                     } else {
                         this.pos++
                     }
                     break;
                 case "!":
                     if (this.peek(1) === "=") {
-                        tokens.push(new Token(TokenType.BangEqual, this.next(2)));
+                        tokens.push(new Token(TokenType.BangEqual, this.pos, this.next(2)));
                     } else {
                         this.pos++
                     }
@@ -53,72 +56,72 @@ class Lexer {
                 case ">":
                     if (this.peek(1) === ">") {
                         if (this.peek(2) === ">") {
-                            tokens.push(new Token(TokenType.TripleGreaterThan, this.next(3)));
+                            tokens.push(new Token(TokenType.TripleGreaterThan, this.pos, this.next(3)));
                         } else {
-                            tokens.push(new Token(TokenType.DoubleGreaterThan, this.next(2)));
+                            tokens.push(new Token(TokenType.DoubleGreaterThan, this.pos, this.next(2)));
                         }
                     } else if (this.peek(1) === "=") {
-                        tokens.push(new Token(TokenType.GreaterEqualThan, this.next(2)));
+                        tokens.push(new Token(TokenType.GreaterEqualThan, this.pos, this.next(2)));
                         this.pos += 2;
                     } else {
-                        tokens.push(new Token(TokenType.GreaterThan, this.next()));
+                        tokens.push(new Token(TokenType.GreaterThan, this.pos, this.next()));
                     }
                     break;
                 case "<":
                     if (this.peek(1) === "<") {
-                        tokens.push(new Token(TokenType.DoubleLessThan, this.next(2)));
+                        tokens.push(new Token(TokenType.DoubleLessThan, this.pos, this.next(2)));
                     } else if (this.peek(1) === "=") {
                         if (this.peek(2) === ">") {
-                            tokens.push(new Token(TokenType.LessEqualGreater, this.next(3)));
+                            tokens.push(new Token(TokenType.LessEqualGreater, this.pos, this.next(3)));
                         } else {
-                            tokens.push(new Token(TokenType.LessEqualGreater, this.next(2)));
+                            tokens.push(new Token(TokenType.LessEqualGreater, this.pos, this.next(2)));
                         }
                     } else {
-                        tokens.push(new Token(TokenType.LessThan, this.next()));
+                        tokens.push(new Token(TokenType.LessThan, this.pos, this.next()));
                     }
                     break;
                 case "&":
                     if (this.peek(1) === "&") {
-                        tokens.push(new Token(TokenType.DoubleAmpersand, this.next(2)));
+                        tokens.push(new Token(TokenType.DoubleAmpersand, this.pos, this.next(2)));
                     } else {
-                        tokens.push(new Token(TokenType.Ampersand, this.next()));
+                        tokens.push(new Token(TokenType.Ampersand, this.pos, this.next()));
                     }
                     break;
                 case "^":
-                    tokens.push(new Token(TokenType.Caret, this.next()));
+                    tokens.push(new Token(TokenType.Caret, this.pos, this.next()));
                     break;
                 case "|":
                     if (this.peek(1) === "|") {
-                        tokens.push(new Token(TokenType.DoublePipe, this.next(2)));
+                        tokens.push(new Token(TokenType.DoublePipe, this.pos, this.next(2)));
                     } else {
-                        tokens.push(new Token(TokenType.Pipe, this.next()));
+                        tokens.push(new Token(TokenType.Pipe, this.pos, this.next()));
                     }
                     break;
                 case "~":
-                    tokens.push(new Token(TokenType.Tilde, this.next()));
+                    tokens.push(new Token(TokenType.Tilde, this.pos, this.next()));
                     break;
                 case "+":
-                    tokens.push(new Token(TokenType.Plus, this.next()));
+                    tokens.push(new Token(TokenType.Plus, this.pos, this.next()));
                     break;
                 case "-":
-                    tokens.push(new Token(TokenType.Minus, this.next()));
+                    tokens.push(new Token(TokenType.Minus, this.pos, this.next()));
                     break;
                 case "*":
                     if (this.peek(1) === "*") {
-                        tokens.push(new Token(TokenType.DoubleStar, this.next(2)));
+                        tokens.push(new Token(TokenType.DoubleStar, this.pos, this.next(2)));
                     } else {
-                        tokens.push(new Token(TokenType.Star, this.next()));
+                        tokens.push(new Token(TokenType.Star, this.pos, this.next()));
                     }
                     break;
                 case "/":
                     if (this.peek(1) === "/") {
-                        tokens.push(new Token(TokenType.DoubleSlash, this.next(2)));
+                        tokens.push(new Token(TokenType.DoubleSlash, this.pos, this.next(2)));
                     } else {
-                        tokens.push(new Token(TokenType.Slash, this.next()));
+                        tokens.push(new Token(TokenType.Slash, this.pos, this.next()));
                     }
                     break;
                 case "%":
-                    tokens.push(new Token(TokenType.Percent, this.next()));
+                    tokens.push(new Token(TokenType.Percent, this.pos, this.next()));
                     break;
                 case " ":
                 case "\t":
@@ -143,7 +146,7 @@ class Lexer {
                             this.pos++;
                         }
 
-                        tokens.push(new Token(TokenType.NumberLiteral, this.source.substring(start, this.pos)));
+                        tokens.push(new Token(TokenType.NumberLiteral, this.pos, this.source.substring(start, this.pos)));
                     } else {
                         let start = this.pos;
 
@@ -154,10 +157,10 @@ class Lexer {
                         switch (literal) {
                             case "true":
                             case "false":
-                                tokens.push(new Token(TokenType.BoolLiteral, literal));
+                                tokens.push(new Token(TokenType.BoolLiteral, this.pos, literal));
                                 break;
                             default:
-                                tokens.push(new Token(TokenType.Identifier, literal));
+                                tokens.push(new Token(TokenType.Identifier, this.pos, literal));
                         }
                     }
             }
@@ -175,12 +178,14 @@ export abstract class SyntaxNode {
 
 export class Token extends SyntaxNode {
     public readonly tokenType: TokenType;
+    public readonly span: TextSpan;
     public readonly literal: string;
 
-    constructor(tokenType: TokenType, literal: string) {
+    constructor(tokenType: TokenType, pos: number, literal: string) {
         super();
 
         this.tokenType = tokenType;
+        this.span = new TextSpan(pos, literal.length);
         this.literal = literal;
     }
 
@@ -307,7 +312,7 @@ export class Parser {
             return this.next();
 
         this.pos++;
-        return new Token(TokenType.Bang, "");
+        return new Token(TokenType.Bang, this.pos - 1, "");
     }
 
     public parse(): SyntaxNode {
