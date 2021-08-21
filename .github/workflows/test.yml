@@ -28,5 +28,5 @@ jobs:
       if: success() || failure()
       with:
         name: Mocha Tests
-        path: test-results
+        path: test-results.json
         reporter: mocha-json
