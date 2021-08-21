@@ -27,7 +27,7 @@ jobs:
       if: success() || failure()
       with:
         name: test-reports
-        path: test-results.json
+        path: ./CAScript-node-js-runtime/test-results.json
     - name: Test Report
       uses: dorny/test-reporter@v1
       if: success() || failure()
