@@ -17,7 +17,7 @@ export class Emitter {
     public readonly root: BoundExpression;
 
     constructor(source: string) {
-        let binder = new Binder(source);
+        const binder = new Binder(source);
 
         this.root = binder.bind();
         this.diagnosticHandler = binder.diagnosticHandler;
@@ -31,7 +31,7 @@ export class Emitter {
 
 class JsEmitter {
     public static emit(root: BoundExpression): string {
-        let builder = new Array<string>();
+        const builder = new Array<string>();
 
         this.emitExpression(root, builder);
 
@@ -44,7 +44,7 @@ class JsEmitter {
                 this.emitLiteralExpression(expression as BoundLiteralExpression, builder);
                 break;
             case BoundType.Parenthesized: {
-                let b1 = new Array<string>();
+                const b1 = new Array<string>();
                 this.emitExpression((expression as BoundParenthesizedExpression).expression, b1);
                 builder.push(`(${b1.join(" ")})`);
                 break;
@@ -104,7 +104,7 @@ class JsEmitter {
                 this.emitExpression(expression.right, builder);
                 break;
             case BinaryOperatorType.Exponent: {
-                let b1 = new Array<string>("Math.pow(");
+                const b1 = new Array<string>("Math.pow(");
                 this.emitExpression(expression.left, b1);
                 b1.push(", ");
                 this.emitExpression(expression.right, b1);
@@ -118,9 +118,9 @@ class JsEmitter {
                 this.emitExpression(expression.right, builder);
                 break;
             case BinaryOperatorType.FloorDivision: {
-                let b1 = new Array<string>("Math.floor(");
+                const b1 = new Array<string>("Math.floor(");
                 this.emitExpression(expression.left, b1);
-                b1.push(" % ");
+                b1.push(" / ");
                 this.emitExpression(expression.right, b1);
                 b1.push(")")
                 builder.push(b1.join(""));
@@ -202,7 +202,7 @@ class JsEmitter {
                 this.emitExpression(expression.right, builder);
                 break;
             case BinaryOperatorType.ThreeWayComparison: {
-                let b1 = new Array<string>("(");
+                const b1 = new Array<string>("(");
                 this.emitExpression(expression.left, b1);
                 b1.push(" === ");
                 this.emitExpression(expression.right, b1);

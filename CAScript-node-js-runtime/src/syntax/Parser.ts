@@ -1,4 +1,3 @@
-import { start } from "repl";
 import { TextSpan } from "../diagnostic";
 
 class Lexer {
@@ -50,7 +49,7 @@ class Lexer {
                     if (this.peek(1) === "=") {
                         tokens.push(new Token(TokenType.BangEqual, this.pos, this.next(2)));
                     } else {
-                        this.pos++
+                        tokens.push(new Token(TokenType.Bang, this.pos, this.next()));
                     }
                     break;
                 case ">":
@@ -62,7 +61,6 @@ class Lexer {
                         }
                     } else if (this.peek(1) === "=") {
                         tokens.push(new Token(TokenType.GreaterEqualThan, this.pos, this.next(2)));
-                        this.pos += 2;
                     } else {
                         tokens.push(new Token(TokenType.GreaterThan, this.pos, this.next()));
                     }
@@ -74,7 +72,7 @@ class Lexer {
                         if (this.peek(2) === ">") {
                             tokens.push(new Token(TokenType.LessEqualGreater, this.pos, this.next(3)));
                         } else {
-                            tokens.push(new Token(TokenType.LessEqualGreater, this.pos, this.next(2)));
+                            tokens.push(new Token(TokenType.LessEqualThan, this.pos, this.next(2)));
                         }
                     } else {
                         tokens.push(new Token(TokenType.LessThan, this.pos, this.next()));
@@ -132,7 +130,7 @@ class Lexer {
                 default:
                     if (!isNaN(+this.peek())) {
                         let dotted = false;
-                        let start = this.pos;
+                        const start = this.pos;
 
                         while ((!isNaN(+this.peek()) || this.peek() === ".") && !/\s/.test(this.peek())) {
                             if (this.peek() === ".") {
@@ -148,11 +146,11 @@ class Lexer {
 
                         tokens.push(new Token(TokenType.NumberLiteral, this.pos, this.source.substring(start, this.pos)));
                     } else {
-                        let start = this.pos;
+                        const start = this.pos;
 
                         while (this.peek() && !/\s/.test(this.peek())) this.pos++;
 
-                        let literal = this.source.substring(start, this.pos);
+                        const literal = this.source.substring(start, this.pos);
 
                         switch (literal) {
                             case "true":
@@ -302,7 +300,7 @@ export class Parser {
     }
 
     private next(): Token {
-        let current = this.peek();
+        const current = this.peek();
         this.pos++;
         return current;
     }
@@ -342,11 +340,11 @@ export class Parser {
             case TokenType.OpenParenthesis:
                 return new ParenthesizedExpression(this.assert(TokenType.OpenParenthesis), this.parseExpression(), this.assert(TokenType.CloseParenthesis));
             case TokenType.NumberLiteral: {
-                let token = this.assert(TokenType.NumberLiteral);
+                const token = this.assert(TokenType.NumberLiteral);
                 return new LiteralExpression(token, +token.literal);
             }
             case TokenType.BoolLiteral: {
-                let token = this.assert(TokenType.BoolLiteral);
+                const token = this.assert(TokenType.BoolLiteral);
                 return new LiteralExpression(token, JSON.parse(token.literal));
             }
             default:

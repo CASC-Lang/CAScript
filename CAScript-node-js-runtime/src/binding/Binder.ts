@@ -1,5 +1,3 @@
-import { abort } from "process";
-import { threadId } from "worker_threads";
 import { DiagnosticHandler } from "../diagnostic";
 import {
     BinaryExpression,
@@ -53,8 +51,8 @@ export class Binder {
     }
 
     private bindUnaryExpression(expression: UnaryExpression): BoundExpression {
-        let operand = this.bindExpression(expression.expression);
-        let operator = BoundUnaryOperator.bind(expression.operator.tokenType, operand.type());
+        const operand = this.bindExpression(expression.expression);
+        const operator = BoundUnaryOperator.bind(expression.operator.tokenType, operand.type());
 
         if (operator) {
             return new BoundUnaryExpression(operator, operand);
@@ -65,9 +63,9 @@ export class Binder {
     }
 
     private bindBinaryExpression(expression: BinaryExpression): BoundExpression {
-        let left = this.bindExpression(expression.left);
-        let right = this.bindExpression(expression.right);
-        let operator = BoundBinaryOperator.bind(expression.operator.tokenType, left.type(), right.type());
+        const left = this.bindExpression(expression.left);
+        const right = this.bindExpression(expression.right);
+        const operator = BoundBinaryOperator.bind(expression.operator.tokenType, left.type(), right.type());
 
         if (operator) {
             return new BoundBinaryExpression(left, operator, right);
@@ -77,12 +75,12 @@ export class Binder {
     }
 
     private bindTernaryExpression(expression: TernaryExpression): BoundExpression {
-        let left = this.bindExpression(expression.left);
-        let center = this.bindExpression(expression.center);
-        let right = this.bindExpression(expression.right);
+        const left = this.bindExpression(expression.left);
+        const center = this.bindExpression(expression.center);
+        const right = this.bindExpression(expression.right);
 
         if (left.type() != Type.Bool) {
-            throw new Error(`Cannot convert `);
+            throw new Error("Cannot convert ");
         }
 
         return new BoundTernaryExpression(left, center, right);
@@ -212,7 +210,7 @@ export class BoundUnaryOperator {
     }
 
     public static bind(tokenType: TokenType, operandType: Type): BoundUnaryOperator | undefined {
-        for (let op of this.types)
+        for (const op of this.types)
             if (op.tokenType == tokenType && op.operandType == operandType)
                 return op;
 
@@ -308,7 +306,7 @@ export class BoundBinaryOperator {
     }
 
     public static bind(tokenType: TokenType, left: Type, right: Type): BoundBinaryOperator | undefined {
-        for (let op of this.types)
+        for (const op of this.types)
             if (op.tokenType == tokenType && op.left == left && op.right == right)
                 return op;
 
