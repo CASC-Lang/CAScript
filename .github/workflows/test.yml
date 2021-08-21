@@ -23,10 +23,15 @@ jobs:
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
+    - uses: actions/upload-artifact@v2
+      if: success() || failure()
+      with:
+        name: test-reports
+        path: test-results.json
     - name: Test Report
       uses: dorny/test-reporter@v1
       if: success() || failure()
       with:
           name: Mocha Tests
-          path: test-results.json
+          path: "artifacts/test-reports/*.json"
           reporter: mocha-json
