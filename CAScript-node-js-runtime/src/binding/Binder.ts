@@ -1,3 +1,4 @@
+import { threadId } from "worker_threads";
 import {
     BinaryExpression,
     ExpressionSyntax,
@@ -34,7 +35,7 @@ export class Binder {
             case SyntaxType.Ternary:
                 return this.bindTernaryExpression(expression as TernaryExpression);
             case SyntaxType.Parenthesized:
-                return this.bindExpression((expression as ParenthesizedExpression).expression);
+                return new BoundParenthesizedExpression(this.bindExpression((expression as ParenthesizedExpression).expression));
             default:
                 throw new Error(`Unknown expression ${expression.type()}`);
         }
@@ -91,6 +92,7 @@ export abstract class BoundNode {
 export const enum BoundType {
     Literal,
     Identifier,
+    Parenthesized,
     Unary,
     Binary,
     Ternary
@@ -145,6 +147,24 @@ export class BoundIdentifierExpression extends BoundExpression {
 
     type(): Type {
         return Type.Bool;
+    }
+}
+
+export class BoundParenthesizedExpression extends BoundExpression {
+    public readonly expression: BoundExpression;
+
+    constructor(expression: BoundExpression) {
+        super();
+
+        this.expression = expression;
+    }
+
+    boundType(): BoundType {
+        return BoundType.Parenthesized;
+    }
+
+    type(): Type {
+        return this.expression.type();
     }
 }
 

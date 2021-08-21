@@ -4,9 +4,13 @@ import {
     BoundBinaryExpression,
     BoundExpression,
     BoundLiteralExpression,
+    BoundParenthesizedExpression,
     BoundTernaryExpression,
-    BoundType
+    BoundType,
+    BoundUnaryExpression,
+    UnaryOperatorType
 } from "../binding/Binder";
+import { UnaryExpression } from "../syntax/Parser";
 
 export class Emitter {
     public root: BoundExpression;
@@ -34,6 +38,15 @@ class JsEmitter {
             case BoundType.Literal:
                 this.emitLiteralExpression(expression as BoundLiteralExpression, builder);
                 break;
+            case BoundType.Parenthesized: {
+                let b1 = new Array<string>();
+                this.emitExpression((expression as BoundParenthesizedExpression).expression, b1);
+                builder.push(`(${b1.join(" ")})`);
+                break;
+            }
+            case BoundType.Unary:
+                this.emitUnaryExpression(expression as BoundUnaryExpression, builder);
+                break;
             case BoundType.Binary:
                 this.emitBinaryExpression(expression as BoundBinaryExpression, builder);
                 break;
@@ -45,6 +58,27 @@ class JsEmitter {
 
     private static emitLiteralExpression(expression: BoundLiteralExpression, builder: string[]) {
         builder.push(expression.value);
+    }
+
+    private static emitUnaryExpression(expression: BoundUnaryExpression, builder: string[]) {
+        switch (expression.operator.operatorType) {
+            case UnaryOperatorType.Complement:
+                builder.push("~");
+                this.emitExpression(expression.expression, builder);
+                break;
+            case UnaryOperatorType.LogicalNot:
+                builder.push("!");
+                this.emitExpression(expression.expression, builder);
+                break;
+            case UnaryOperatorType.Identity:
+                builder.push("+");
+                this.emitExpression(expression.expression, builder);
+                break;
+            case UnaryOperatorType.Negation:
+                builder.push("-");
+                this.emitExpression(expression.expression, builder);
+                break;
+        }
     }
 
     private static emitBinaryExpression(expression: BoundBinaryExpression, builder: string[]) {
@@ -97,9 +131,69 @@ class JsEmitter {
                 builder.push("===");
                 this.emitExpression(expression.right, builder);
                 break;
+            case BinaryOperatorType.NotEqual:
+                this.emitExpression(expression.left, builder);
+                builder.push("!==");
+                this.emitExpression(expression.right, builder);
+                break;
+            case BinaryOperatorType.LeftShift:
+                this.emitExpression(expression.left, builder);
+                builder.push("<<");
+                this.emitExpression(expression.right, builder);
+                break;
             case BinaryOperatorType.UnsignedRightShift:
                 this.emitExpression(expression.left, builder);
                 builder.push(">>>");
+                this.emitExpression(expression.right, builder);
+                break;
+            case BinaryOperatorType.RightShift:
+                this.emitExpression(expression.left, builder);
+                builder.push(">>");
+                this.emitExpression(expression.right, builder);
+                break;
+            case BinaryOperatorType.BitwiseAnd:
+                this.emitExpression(expression.left, builder);
+                builder.push("&");
+                this.emitExpression(expression.right, builder);
+                break;
+            case BinaryOperatorType.BitwiseExclusiveOr:
+                this.emitExpression(expression.left, builder);
+                builder.push("^");
+                this.emitExpression(expression.right, builder);
+                break;
+            case BinaryOperatorType.BitwiseInclusiveOr:
+                this.emitExpression(expression.left, builder);
+                builder.push("|");
+                this.emitExpression(expression.right, builder);
+                break;
+            case BinaryOperatorType.LogicalAnd:
+                this.emitExpression(expression.left, builder);
+                builder.push("&&");
+                this.emitExpression(expression.right, builder);
+                break;
+            case BinaryOperatorType.LogicalOr:
+                this.emitExpression(expression.left, builder);
+                builder.push("||");
+                this.emitExpression(expression.right, builder);
+                break;
+            case BinaryOperatorType.Greater:
+                this.emitExpression(expression.left, builder);
+                builder.push(">");
+                this.emitExpression(expression.right, builder);
+                break;
+            case BinaryOperatorType.GreaterEqual:
+                this.emitExpression(expression.left, builder);
+                builder.push(">=");
+                this.emitExpression(expression.right, builder);
+                break;
+            case BinaryOperatorType.Less:
+                this.emitExpression(expression.left, builder);
+                builder.push("<");
+                this.emitExpression(expression.right, builder);
+                break;
+            case BinaryOperatorType.LessEqual:
+                this.emitExpression(expression.left, builder);
+                builder.push("<=");
                 this.emitExpression(expression.right, builder);
                 break;
             case BinaryOperatorType.ThreeWayComparison: {
