@@ -15,7 +15,7 @@ steps:
     npm install mocha-junit-reporter --save-dev
   displayName: 'npm install'
 
-- script: npx nyc --report cobertura mocha -r ts-node/register test/**/*.ts --reporter mocha-junit-reporter
+- script: npx nyc --reporter=cobertura mocha -r ts-node/register test/**/*.ts --reporter mocha-junit-reporter
   displayName: 'run mocha test (with code coverage)'
 
 - task: PublishTestResults@2
