@@ -13,6 +13,6 @@
 <hr/>
 </div>
 
-> CASC scriting!  
+> CASC scripting!  
 
 It's now in alpha developing.
