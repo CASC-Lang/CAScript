@@ -7,6 +7,7 @@
 
 ![example workflow](https://github.com/CASC-Lang/CAScript/actions/workflows/test.yml/badge.svg)
 [![Build Status](https://dev.azure.com/minecraftkyletrain/CAScript/_apis/build/status/CASC-Lang.CAScript?branchName=main)](https://dev.azure.com/minecraftkyletrain/CAScript/_build/latest?definitionId=5&branchName=main)
+![Azure DevOps coverage](https://img.shields.io/azure-devops/coverage/minecraftkyletrain/CAScript/5)
 
 
 <hr/>
