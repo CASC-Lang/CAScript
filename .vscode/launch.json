@@ -3,7 +3,7 @@
     "configurations": [
         {
             "command": "npm run watch:debug",
-            "name": "start dev session",
+            "name": "Run npm",
             "request": "launch",
             "type": "node-terminal"
         }

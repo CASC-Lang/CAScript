@@ -1,6 +1,7 @@
-import { TextSpan } from "../diagnostic";
+import { DiagnosticHandler, TextSpan } from "../diagnostic";
 
 class Lexer {
+    public readonly diagnosticHandler = new DiagnosticHandler();
     private readonly source: string;
     private pos = 0;
 
@@ -129,22 +130,17 @@ class Lexer {
                     break;
                 default:
                     if (!isNaN(+this.peek())) {
-                        let dotted = false;
                         const start = this.pos;
 
-                        while ((!isNaN(+this.peek()) || this.peek() === ".") && !/\s/.test(this.peek())) {
-                            if (this.peek() === ".") {
-                                if (!dotted) {
-                                    dotted = true;
-                                } else {
-                                    throw new Error("Invalid number format");
-                                }
-                            }
+                        while (this.peek() && !/\s/.test(this.peek())) this.pos++;
 
-                            this.pos++;
+                        const numberLiteral = this.source.substring(start, this.pos);
+
+                        if (isNaN(+numberLiteral)) {
+                            this.diagnosticHandler.reportInvalidNumberFormat(new TextSpan(start, start - this.pos), this.source.substring(start, this.pos));
                         }
 
-                        tokens.push(new Token(TokenType.NumberLiteral, this.pos, this.source.substring(start, this.pos)));
+                        tokens.push(new Token(TokenType.NumberLiteral, this.pos, numberLiteral));
                     } else {
                         const start = this.pos;
 
@@ -288,11 +284,15 @@ export namespace TokenType {
 }
 
 export class Parser {
+    public readonly diagnosticHandler: DiagnosticHandler;
     private readonly tokens: Token[];
     private pos = 0;
 
     constructor(source: string) {
-        this.tokens = new Lexer(source).lex();
+        const lexer = new Lexer(source);
+
+        this.tokens = lexer.lex();
+        this.diagnosticHandler = lexer.diagnosticHandler;
     }
 
     private peek(offset = 0): Token {
@@ -308,6 +308,8 @@ export class Parser {
     private assert(type: TokenType): Token {
         if (this.peek().tokenType == type)
             return this.next();
+
+        this.diagnosticHandler.reportUnexpectedToken(this.peek().span, this.peek().tokenType, type);
 
         this.pos++;
         return new Token(TokenType.Bang, this.pos - 1, "");

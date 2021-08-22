@@ -12,11 +12,14 @@ import {
 } from "../syntax/Parser";
 
 export class Binder {
-    public readonly diagnosticHandler: DiagnosticHandler = new DiagnosticHandler();
+    public readonly diagnosticHandler: DiagnosticHandler;
     private readonly root: ExpressionSyntax;
 
     constructor(source: string) {
-        this.root = new Parser(source).parse();
+        const parser = new Parser(source)
+
+        this.root = parser.parse();
+        this.diagnosticHandler = parser.diagnosticHandler;
     }
 
     public bind(): BoundExpression {
@@ -70,7 +73,8 @@ export class Binder {
         if (operator) {
             return new BoundBinaryExpression(left, operator, right);
         } else {
-            throw new Error("Unknown operator");
+            this.diagnosticHandler.reportBinaryTypeMismatch(expression.operator.span, expression.operator.literal, left.type(), right.type());
+            return new BoundErrorExpression();
         }
     }
 
@@ -115,7 +119,7 @@ export class BoundErrorExpression extends BoundExpression {
     public boundType(): BoundType {
         return BoundType.ERROR;
     }
-    
+
     public type(): Type {
         return Type.Undefined;
     }

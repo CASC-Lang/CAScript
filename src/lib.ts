@@ -1,9 +1,7 @@
 import * as fs from "fs";
 import { createInterface } from "readline";
-import { bgRedBright, black } from "chalk";
+import { bgGreenBright, bgRedBright, black } from "chalk";
 import { Emitter } from "./emit/Emitter";
-
-console.log(process.argv);
 
 const command = process.argv[2];
 
@@ -27,14 +25,14 @@ switch (command) {
 
 		const result = emitter.emitJs();
 
-		console.log(result);
-		console.log(eval(result).toString());
+		console.log(bgGreenBright(black(eval(result).toString())));
 		break;
 	}
 	case "repl": {
 		const readline = createInterface({
 			input: process.stdin,
 			output: process.stdout,
+			terminal: false
 		});
 		let input: string;
 
@@ -55,7 +53,7 @@ switch (command) {
 					} else {
 						const result = emitter.emitJs();
 
-	                    console.log(eval(result).toString());
+						console.log(bgGreenBright(black(eval(result).toString())));
 					}
 					proc();
 				}

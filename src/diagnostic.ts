@@ -1,4 +1,5 @@
 import { Type } from "./binding/Binder";
+import { TokenType } from "./syntax/Parser";
 
 export class DiagnosticHandler {
     public readonly diagnostics = new Array<Diagnostic>();
@@ -6,13 +7,21 @@ export class DiagnosticHandler {
     private report(span: TextSpan, message: string) {
         this.diagnostics.push(new Diagnostic(span, message));
     }
+    
+    public reportInvalidNumberFormat(span: TextSpan, numberLiteral: string) {
+        this.report(span, `ERROR: Invalid number format: '${numberLiteral}'`);
+    }
+
+    public reportUnexpectedToken(span: TextSpan, providedToken: TokenType, expectedToken: TokenType) {
+        this.report(span, `ERROR: Unexpected token '${TokenType[providedToken]}', expected token '${TokenType[expectedToken]}'`);
+    }
 
     public reportUnaryTypeMismatch(span: TextSpan, operator: string, providedType: Type) {
         this.report(span, `ERROR: Cannot apply operator '${operator}' on type '${providedType}'`);
     }
 
     public reportBinaryTypeMismatch(span: TextSpan, operator: string, type1: Type, type2: Type) {
-        
+        this.report(span, `ERROR: Cannot apply operator '${operator}' on type '${type1}' and type '${type2}'`);
     }
 }
 
