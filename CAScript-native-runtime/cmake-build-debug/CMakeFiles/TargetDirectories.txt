@@ -1,8 +1,0 @@
-C:/Users/KYLE/OneDrive/Desktop/github/CAScript/CAScript-native-runtime/cmake-build-debug/CMakeFiles/edit_cache.dir
-C:/Users/KYLE/OneDrive/Desktop/github/CAScript/CAScript-native-runtime/cmake-build-debug/CMakeFiles/collage_cpp.dir
-C:/Users/KYLE/OneDrive/Desktop/github/CAScript/CAScript-native-runtime/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-C:/Users/KYLE/OneDrive/Desktop/github/CAScript/CAScript-native-runtime/cmake-build-debug/thirdparty/magic_enum/CMakeFiles/edit_cache.dir
-C:/Users/KYLE/OneDrive/Desktop/github/CAScript/CAScript-native-runtime/cmake-build-debug/thirdparty/magic_enum/CMakeFiles/rebuild_cache.dir
-C:/Users/KYLE/OneDrive/Desktop/github/CAScript/CAScript-native-runtime/cmake-build-debug/thirdparty/colored/CMakeFiles/colored.dir
-C:/Users/KYLE/OneDrive/Desktop/github/CAScript/CAScript-native-runtime/cmake-build-debug/thirdparty/colored/CMakeFiles/edit_cache.dir
-C:/Users/KYLE/OneDrive/Desktop/github/CAScript/CAScript-native-runtime/cmake-build-debug/thirdparty/colored/CMakeFiles/rebuild_cache.dir

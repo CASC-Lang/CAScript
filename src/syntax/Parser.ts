@@ -1,7 +1,7 @@
 import { DiagnosticHandler, TextSpan } from "../diagnostic";
 
 class Lexer {
-<<<<<<< HEAD:CAScript-node-js-runtime/src/syntax/Parser.ts
+	public readonly diagnosticHandler = new DiagnosticHandler();
 	private readonly source: string;
 	private pos = 0;
 
@@ -250,29 +250,28 @@ class Lexer {
 					break;
 				default:
 					if (!isNaN(+this.peek())) {
-						let dotted = false;
 						const start = this.pos;
 
-						while (
-							(!isNaN(+this.peek()) || this.peek() === ".") &&
-							!/\s/.test(this.peek())
-						) {
-							if (this.peek() === ".") {
-								if (!dotted) {
-									dotted = true;
-								} else {
-									throw new Error("Invalid number format");
-								}
-							}
-
+						while (this.peek() && !/\s/.test(this.peek()))
 							this.pos++;
+
+						const numberLiteral = this.source.substring(
+							start,
+							this.pos
+						);
+
+						if (isNaN(+numberLiteral)) {
+							this.diagnosticHandler.reportInvalidNumberFormat(
+								new TextSpan(start, start - this.pos),
+								this.source.substring(start, this.pos)
+							);
 						}
 
 						tokens.push(
 							new Token(
 								TokenType.NumberLiteral,
 								this.pos,
-								this.source.substring(start, this.pos)
+								numberLiteral
 							)
 						);
 					} else {
@@ -309,169 +308,6 @@ class Lexer {
 
 		return tokens;
 	}
-=======
-    public readonly diagnosticHandler = new DiagnosticHandler();
-    private readonly source: string;
-    private pos = 0;
-
-    constructor(source: string) {
-        this.source = source;
-    }
-
-    private peek(offset: number = 0): string {
-        return this.source[this.pos + offset];
-    }
-
-    private next(len: number = 1): string {
-        if (len === 1) {
-            return this.source[this.pos++];
-        } else {
-            this.pos += len;
-            return this.source.substr(this.pos - len, len);
-        }
-    }
-
-    public lex(): Token[] {
-        const tokens = new Array<Token>();
-
-        while (this.pos < this.source.length) {
-            switch (this.source[this.pos]) {
-                case "(":
-                    tokens.push(new Token(TokenType.OpenParenthesis, this.pos, this.next()));
-                    break;
-                case ")":
-                    tokens.push(new Token(TokenType.CloseParenthesis, this.pos, this.next()));
-                    break;
-                case "?":
-                    tokens.push(new Token(TokenType.QuestionMark, this.pos, this.next()));
-                    break;
-                case ":":
-                    tokens.push(new Token(TokenType.Colon, this.pos, this.next()));
-                    break;
-                case "=":
-                    if (this.peek(1) === "=") {
-                        tokens.push(new Token(TokenType.DoubleEqual, this.pos, this.next(2)));
-                    } else {
-                        this.pos++
-                    }
-                    break;
-                case "!":
-                    if (this.peek(1) === "=") {
-                        tokens.push(new Token(TokenType.BangEqual, this.pos, this.next(2)));
-                    } else {
-                        tokens.push(new Token(TokenType.Bang, this.pos, this.next()));
-                    }
-                    break;
-                case ">":
-                    if (this.peek(1) === ">") {
-                        if (this.peek(2) === ">") {
-                            tokens.push(new Token(TokenType.TripleGreaterThan, this.pos, this.next(3)));
-                        } else {
-                            tokens.push(new Token(TokenType.DoubleGreaterThan, this.pos, this.next(2)));
-                        }
-                    } else if (this.peek(1) === "=") {
-                        tokens.push(new Token(TokenType.GreaterEqualThan, this.pos, this.next(2)));
-                    } else {
-                        tokens.push(new Token(TokenType.GreaterThan, this.pos, this.next()));
-                    }
-                    break;
-                case "<":
-                    if (this.peek(1) === "<") {
-                        tokens.push(new Token(TokenType.DoubleLessThan, this.pos, this.next(2)));
-                    } else if (this.peek(1) === "=") {
-                        if (this.peek(2) === ">") {
-                            tokens.push(new Token(TokenType.LessEqualGreater, this.pos, this.next(3)));
-                        } else {
-                            tokens.push(new Token(TokenType.LessEqualThan, this.pos, this.next(2)));
-                        }
-                    } else {
-                        tokens.push(new Token(TokenType.LessThan, this.pos, this.next()));
-                    }
-                    break;
-                case "&":
-                    if (this.peek(1) === "&") {
-                        tokens.push(new Token(TokenType.DoubleAmpersand, this.pos, this.next(2)));
-                    } else {
-                        tokens.push(new Token(TokenType.Ampersand, this.pos, this.next()));
-                    }
-                    break;
-                case "^":
-                    tokens.push(new Token(TokenType.Caret, this.pos, this.next()));
-                    break;
-                case "|":
-                    if (this.peek(1) === "|") {
-                        tokens.push(new Token(TokenType.DoublePipe, this.pos, this.next(2)));
-                    } else {
-                        tokens.push(new Token(TokenType.Pipe, this.pos, this.next()));
-                    }
-                    break;
-                case "~":
-                    tokens.push(new Token(TokenType.Tilde, this.pos, this.next()));
-                    break;
-                case "+":
-                    tokens.push(new Token(TokenType.Plus, this.pos, this.next()));
-                    break;
-                case "-":
-                    tokens.push(new Token(TokenType.Minus, this.pos, this.next()));
-                    break;
-                case "*":
-                    if (this.peek(1) === "*") {
-                        tokens.push(new Token(TokenType.DoubleStar, this.pos, this.next(2)));
-                    } else {
-                        tokens.push(new Token(TokenType.Star, this.pos, this.next()));
-                    }
-                    break;
-                case "/":
-                    if (this.peek(1) === "/") {
-                        tokens.push(new Token(TokenType.DoubleSlash, this.pos, this.next(2)));
-                    } else {
-                        tokens.push(new Token(TokenType.Slash, this.pos, this.next()));
-                    }
-                    break;
-                case "%":
-                    tokens.push(new Token(TokenType.Percent, this.pos, this.next()));
-                    break;
-                case " ":
-                case "\t":
-                case "\n":
-                case "\r":
-                    this.next();
-                    break;
-                default:
-                    if (!isNaN(+this.peek())) {
-                        const start = this.pos;
-
-                        while (this.peek() && !/\s/.test(this.peek())) this.pos++;
-
-                        const numberLiteral = this.source.substring(start, this.pos);
-
-                        if (isNaN(+numberLiteral)) {
-                            this.diagnosticHandler.reportInvalidNumberFormat(new TextSpan(start, start - this.pos), this.source.substring(start, this.pos));
-                        }
-
-                        tokens.push(new Token(TokenType.NumberLiteral, this.pos, numberLiteral));
-                    } else {
-                        const start = this.pos;
-
-                        while (this.peek() && !/\s/.test(this.peek())) this.pos++;
-
-                        const literal = this.source.substring(start, this.pos);
-
-                        switch (literal) {
-                            case "true":
-                            case "false":
-                                tokens.push(new Token(TokenType.BoolLiteral, this.pos, literal));
-                                break;
-                            default:
-                                tokens.push(new Token(TokenType.Identifier, this.pos, literal));
-                        }
-                    }
-            }
-        }
-
-        return tokens;
-    }
->>>>>>> 89a21e72461634cebff7b764825e3454f1f14096:src/syntax/Parser.ts
 }
 
 export abstract class SyntaxNode {
@@ -594,12 +430,15 @@ export namespace TokenType {
 }
 
 export class Parser {
-<<<<<<< HEAD:CAScript-node-js-runtime/src/syntax/Parser.ts
+	public readonly diagnosticHandler: DiagnosticHandler;
 	private readonly tokens: Token[];
 	private pos = 0;
 
 	constructor(source: string) {
-		this.tokens = new Lexer(source).lex();
+		const lexer = new Lexer(source);
+
+		this.tokens = lexer.lex();
+		this.diagnosticHandler = lexer.diagnosticHandler;
 	}
 
 	private peek(offset = 0): Token {
@@ -616,6 +455,12 @@ export class Parser {
 
 	private assert(type: TokenType): Token {
 		if (this.peek().tokenType == type) return this.next();
+
+		this.diagnosticHandler.reportUnexpectedToken(
+			this.peek().span,
+			this.peek().tokenType,
+			type
+		);
 
 		this.pos++;
 		return new Token(TokenType.Bang, this.pos - 1, "");
@@ -682,77 +527,6 @@ export class Parser {
 				);
 		}
 	}
-=======
-    public readonly diagnosticHandler: DiagnosticHandler;
-    private readonly tokens: Token[];
-    private pos = 0;
-
-    constructor(source: string) {
-        const lexer = new Lexer(source);
-
-        this.tokens = lexer.lex();
-        this.diagnosticHandler = lexer.diagnosticHandler;
-    }
-
-    private peek(offset = 0): Token {
-        return this.pos + offset < this.tokens.length ? this.tokens[this.pos + offset] : this.tokens[this.tokens.length - 1];
-    }
-
-    private next(): Token {
-        const current = this.peek();
-        this.pos++;
-        return current;
-    }
-
-    private assert(type: TokenType): Token {
-        if (this.peek().tokenType == type)
-            return this.next();
-
-        this.diagnosticHandler.reportUnexpectedToken(this.peek().span, this.peek().tokenType, type);
-
-        this.pos++;
-        return new Token(TokenType.Bang, this.pos - 1, "");
-    }
-
-    public parse(): SyntaxNode {
-        return this.parseExpression();
-    }
-
-    public parseExpression(parentPrecedence = 0): ExpressionSyntax {
-        let left: ExpressionSyntax;
-        let precedence = TokenType.unaryPrecedence(this.peek().tokenType);
-        left = precedence != 0 || precedence > parentPrecedence ? new UnaryExpression(this.next(), this.parseExpression(precedence))
-            : this.parsePrimaryExpression();
-
-        for (; ;) {
-            precedence = TokenType.binaryPrecedence(this.peek().tokenType);
-
-            if (precedence == 0 || precedence <= parentPrecedence) break;
-
-            left = precedence == 1 ? new TernaryExpression(left, this.next(), this.parseExpression(precedence), this.next(), this.parseExpression(precedence))
-                : new BinaryExpression(left, this.next(), this.parseExpression(precedence));
-        }
-
-        return left;
-    }
-
-    public parsePrimaryExpression(): ExpressionSyntax {
-        switch (this.peek().tokenType) {
-            case TokenType.OpenParenthesis:
-                return new ParenthesizedExpression(this.assert(TokenType.OpenParenthesis), this.parseExpression(), this.assert(TokenType.CloseParenthesis));
-            case TokenType.NumberLiteral: {
-                const token = this.assert(TokenType.NumberLiteral);
-                return new LiteralExpression(token, +token.literal);
-            }
-            case TokenType.BoolLiteral: {
-                const token = this.assert(TokenType.BoolLiteral);
-                return new LiteralExpression(token, JSON.parse(token.literal));
-            }
-            default:
-                return new IdentifierExpression(this.assert(TokenType.Identifier));
-        }
-    }
->>>>>>> 89a21e72461634cebff7b764825e3454f1f14096:src/syntax/Parser.ts
 }
 
 export const enum SyntaxType {

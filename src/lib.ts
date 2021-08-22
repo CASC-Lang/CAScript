@@ -32,7 +32,7 @@ switch (command) {
 		const readline = createInterface({
 			input: process.stdin,
 			output: process.stdout,
-			terminal: false
+			terminal: false,
 		});
 		let input: string;
 
@@ -53,11 +53,9 @@ switch (command) {
 					} else {
 						const result = emitter.emitJs();
 
-<<<<<<< HEAD:CAScript-node-js-runtime/src/lib.ts
-						console.log(eval(result).toString());
-=======
-						console.log(bgGreenBright(black(eval(result).toString())));
->>>>>>> 89a21e72461634cebff7b764825e3454f1f14096:src/lib.ts
+						console.log(
+							bgGreenBright(black(eval(result).toString()))
+						);
 					}
 					proc();
 				}

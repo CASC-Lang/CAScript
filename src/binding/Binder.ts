@@ -13,13 +13,14 @@ import {
 } from "../syntax/Parser";
 
 export class Binder {
-<<<<<<< HEAD:CAScript-node-js-runtime/src/binding/Binder.ts
-	public readonly diagnosticHandler: DiagnosticHandler =
-		new DiagnosticHandler();
+	public readonly diagnosticHandler: DiagnosticHandler;
 	private readonly root: ExpressionSyntax;
 
 	constructor(source: string) {
-		this.root = new Parser(source).parse();
+		const parser = new Parser(source);
+
+		this.root = parser.parse();
+		this.diagnosticHandler = parser.diagnosticHandler;
 	}
 
 	public bind(): BoundExpression {
@@ -102,7 +103,13 @@ export class Binder {
 		if (operator) {
 			return new BoundBinaryExpression(left, operator, right);
 		} else {
-			throw new Error("Unknown operator");
+			this.diagnosticHandler.reportBinaryTypeMismatch(
+				expression.operator.span,
+				expression.operator.literal,
+				left.type(),
+				right.type()
+			);
+			return new BoundErrorExpression();
 		}
 	}
 
@@ -119,85 +126,6 @@ export class Binder {
 
 		return new BoundTernaryExpression(left, center, right);
 	}
-=======
-    public readonly diagnosticHandler: DiagnosticHandler;
-    private readonly root: ExpressionSyntax;
-
-    constructor(source: string) {
-        const parser = new Parser(source)
-
-        this.root = parser.parse();
-        this.diagnosticHandler = parser.diagnosticHandler;
-    }
-
-    public bind(): BoundExpression {
-        return this.bindExpression(this.root);
-    }
-
-    private bindExpression(expression: ExpressionSyntax): BoundExpression {
-        switch (expression.type()) {
-            case SyntaxType.Literal:
-                return this.bindLiteralExpression(expression as LiteralExpression);
-            case SyntaxType.Identifier:
-                return this.bindIdentifierExpression(expression as IdentifierExpression);
-            case SyntaxType.Unary:
-                return this.bindUnaryExpression(expression as UnaryExpression);
-            case SyntaxType.Binary:
-                return this.bindBinaryExpression(expression as BinaryExpression);
-            case SyntaxType.Ternary:
-                return this.bindTernaryExpression(expression as TernaryExpression);
-            case SyntaxType.Parenthesized:
-                return new BoundParenthesizedExpression(this.bindExpression((expression as ParenthesizedExpression).expression));
-            default:
-                throw new Error(`Unknown expression ${expression.type()}`);
-        }
-    }
-
-    private bindLiteralExpression(expression: LiteralExpression): BoundExpression {
-        return new BoundLiteralExpression(expression.value);
-    }
-
-    private bindIdentifierExpression(expression: IdentifierExpression): BoundExpression {
-        return new BoundIdentifierExpression(expression.token.literal);
-    }
-
-    private bindUnaryExpression(expression: UnaryExpression): BoundExpression {
-        const operand = this.bindExpression(expression.expression);
-        const operator = BoundUnaryOperator.bind(expression.operator.tokenType, operand.type());
-
-        if (operator) {
-            return new BoundUnaryExpression(operator, operand);
-        } else {
-            this.diagnosticHandler.reportUnaryTypeMismatch(expression.operator.span, expression.operator.literal, operand.type());
-            return new BoundErrorExpression();
-        }
-    }
-
-    private bindBinaryExpression(expression: BinaryExpression): BoundExpression {
-        const left = this.bindExpression(expression.left);
-        const right = this.bindExpression(expression.right);
-        const operator = BoundBinaryOperator.bind(expression.operator.tokenType, left.type(), right.type());
-
-        if (operator) {
-            return new BoundBinaryExpression(left, operator, right);
-        } else {
-            this.diagnosticHandler.reportBinaryTypeMismatch(expression.operator.span, expression.operator.literal, left.type(), right.type());
-            return new BoundErrorExpression();
-        }
-    }
-
-    private bindTernaryExpression(expression: TernaryExpression): BoundExpression {
-        const left = this.bindExpression(expression.left);
-        const center = this.bindExpression(expression.center);
-        const right = this.bindExpression(expression.right);
-
-        if (left.type() != Type.Bool) {
-            throw new Error("Cannot convert ");
-        }
-
-        return new BoundTernaryExpression(left, center, right);
-    }
->>>>>>> 89a21e72461634cebff7b764825e3454f1f14096:src/binding/Binder.ts
 }
 
 export abstract class BoundNode {
@@ -225,7 +153,6 @@ export abstract class BoundExpression extends BoundNode {
 }
 
 export class BoundErrorExpression extends BoundExpression {
-<<<<<<< HEAD:CAScript-node-js-runtime/src/binding/Binder.ts
 	public boundType(): BoundType {
 		return BoundType.ERROR;
 	}
@@ -233,15 +160,6 @@ export class BoundErrorExpression extends BoundExpression {
 	public type(): Type {
 		return Type.Undefined;
 	}
-=======
-    public boundType(): BoundType {
-        return BoundType.ERROR;
-    }
-
-    public type(): Type {
-        return Type.Undefined;
-    }
->>>>>>> 89a21e72461634cebff7b764825e3454f1f14096:src/binding/Binder.ts
 }
 
 export class BoundLiteralExpression extends BoundExpression {
