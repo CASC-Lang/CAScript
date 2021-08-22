@@ -20,7 +20,7 @@ steps:
     npm install mocha-junit-reporter --save-dev
   displayName: 'npm install'
 
-- script: mocha test --reporter mocha-junit-reporter -r ts-node/register test/**/*.ts
+- script: npx mocha -r ts-node/register test/**/*.ts --reporter mocha-junit-reporter
   displayName: 'run mocha test'
 
 - task: PublishTestResults@2
@@ -29,7 +29,7 @@ steps:
     testRunner: JUnit
     testResultsFiles: '**/TEST-RESULTS.xml'
     
-- script: nyc --repoter=cobertura mocha test --reporter mocha-junit-reporter -r ts-node/register test/**/*.ts
+- script: npx nyc --repoter=cobertura mocha test --reporter mocha-junit-reporter -r ts-node/register test/**/*.ts
   displayName: 'run mocha test (code coverage)'
 - task: PublishCodeCoverageResults@1
   inputs:
