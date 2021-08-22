@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<CodeBlocks_project_file>
+	<FileVersion major="1" minor="6"/>
+	<Project>
+		<Option title="magic_enum"/>
+		<Option makefile_is_custom="1"/>
+		<Option compiler="gcc"/>
+		<Option virtualFolders="CMake Files\;CMake Files\thirdparty\;CMake Files\thirdparty\magic_enum\;CMake Files\thirdparty\colored\;"/>
+		<Build>
+			<Target title="all">
+				<Option working_dir="C:/Users/KYLE/OneDrive/Desktop/github/CAScript/CAScript-native-runtime/cmake-build-debug/thirdparty/magic_enum"/>
+				<Option type="4"/>
+				<MakeCommands>
+					<Build command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/KYLE/OneDrive/Desktop/github/CAScript/CAScript-native-runtime/cmake-build-debug/thirdparty/magic_enum/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/KYLE/OneDrive/Desktop/github/CAScript/CAScript-native-runtime/cmake-build-debug/thirdparty/magic_enum/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/KYLE/OneDrive/Desktop/github/CAScript/CAScript-native-runtime/cmake-build-debug/thirdparty/magic_enum/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="C:/MinGW/bin/mingw32-make.exe -f &quot;C:/Users/KYLE/OneDrive/Desktop/github/CAScript/CAScript-native-runtime/cmake-build-debug/thirdparty/magic_enum/Makefile&quot;  VERBOSE=1 clean"/>
+				</MakeCommands>
+			</Target>
+		</Build>
+		<Unit filename="C:/Users/KYLE/OneDrive/Desktop/github/CAScript/CAScript-native-runtime/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\"/>
+		</Unit>
+		<Unit filename="C:/Users/KYLE/OneDrive/Desktop/github/CAScript/CAScript-native-runtime/thirdparty/magic_enum/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\thirdparty\magic_enum\"/>
+		</Unit>
+		<Unit filename="C:/Users/KYLE/OneDrive/Desktop/github/CAScript/CAScript-native-runtime/thirdparty/colored/CMakeLists.txt">
+			<Option virtualFolder="CMake Files\thirdparty\colored\"/>
+		</Unit>
+	</Project>
+</CodeBlocks_project_file>

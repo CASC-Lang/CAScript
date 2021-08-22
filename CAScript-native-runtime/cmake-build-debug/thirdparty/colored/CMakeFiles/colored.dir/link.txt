@@ -1,0 +1,2 @@
+C:\MinGW\bin\ar.exe qc libcolored.a CMakeFiles/colored.dir/src/colored.cpp.obj
+C:\MinGW\bin\ranlib.exe libcolored.a
