@@ -2,7 +2,7 @@ import { describe } from "mocha";
 import { expect } from "chai";
 import { Emitter } from "../src/emit/Emitter";
 
-const evaluate = (sourceCode: string): any => {
+export const evaluate = (sourceCode: string): any => {
 	const emitter = new Emitter(sourceCode);
 
 	return eval(emitter.emitJs());
