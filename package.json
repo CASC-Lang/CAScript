@@ -6,7 +6,8 @@
   "scripts": {
     "watch:debug": "nodemon --inspect=5858 -e ts,tsx --exec node -r ts-node/register ./src/lib.ts repl",
     "eslint": "eslint src test --ext .ts",
-    "test": "mocha -r ts-node/register test/**/*.ts --reporter mocha-junit-reporter"
+    "test": "mocha -r ts-node/register test/**/*.ts --reporter mocha-junit-reporter",
+    "coverage": "nyc --reporter=text mocha -r ts-node/register test/**/*.ts"
   },
   "keywords": [],
   "author": "",
@@ -22,6 +23,7 @@
     "mocha": "^9.1.0",
     "mocha-junit-reporter": "^2.0.0",
     "nodemon": "^2.0.12",
+    "nyc": "^15.1.0",
     "rimraf": "^3.0.2",
     "ts-node": "^10.2.1",
     "typescript": "^4.3.5",

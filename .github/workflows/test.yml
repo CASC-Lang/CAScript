@@ -20,6 +20,11 @@ jobs:
     - run: npm run build --if-present
     - run: npm test
     - run: npm run eslint
+    - uses: actions/checkout@v3
+    - name: Code coverage-reporter
+      uses: tj-actions/coverage-reporter@v3
+      with:
+        coverage-command: "nyc --reporter=text mocha -r ts-node/register test/**/*.ts"
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v1
       if: always()
