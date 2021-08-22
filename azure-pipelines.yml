@@ -18,8 +18,7 @@ steps:
 - script: |
     npm install
     npm install mocha-junit-reporter --save-dev
-    npm run build
-  displayName: 'npm install and build'
+  displayName: 'npm install'
 
 - script: mocha test --reporter mocha-junit-reporter -r ts-node/register test/**/*.ts
   displayName: 'run mocha test'
