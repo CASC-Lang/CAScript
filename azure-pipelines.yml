@@ -20,19 +20,11 @@ steps:
     npm install mocha-junit-reporter --save-dev
   displayName: 'npm install'
 
-- script: npx mocha -r ts-node/register test/**/*.ts --reporter mocha-junit-reporter
-  displayName: 'run mocha test'
+- script: npx nyc --repoter=cobertura mocha -r ts-node/register test/**/*.ts --reporter mocha-junit-reporter
+  displayName: 'run mocha test (with code coverage)'
 
 - task: PublishTestResults@2
   condition: succeededOrFailed()
   inputs:
     testRunner: JUnit
-    testResultsFiles: '**/TEST-RESULTS.xml'
-    
-- script: npx nyc --repoter=cobertura mocha test --reporter mocha-junit-reporter -r ts-node/register test/**/*.ts
-  displayName: 'run mocha test (code coverage)'
-- task: PublishCodeCoverageResults@1
-  inputs:
-    codeCoverageTool: 'Cobertura'
-    summaryFileLocation: '$(System.DefaultWorkingDirectory)/coverage/cobertura-coverage.xml'
-    reportDirectory: '$(System.DefaultWorkingDirectory)/coverage/'
+    testResultsFiles: './test-results.xml'
