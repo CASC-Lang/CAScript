@@ -55,7 +55,7 @@ switch (command) {
 					} else {
 						const result = emitter.emitJs();
 
-	                    console.log(eval(result).toString());
+						console.log(eval(result).toString());
 					}
 					proc();
 				}
