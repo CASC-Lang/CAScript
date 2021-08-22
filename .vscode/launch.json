@@ -2,19 +2,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "ts-node",
-            "type": "node",
+            "command": "npm run watch:debug",
+            "name": "start dev session",
             "request": "launch",
-            "args": [
-                "${relativeFile}"
-            ],
-            "runtimeArgs": [
-                "-r",
-                "ts-node/register"
-            ],
-            "cwd": "${workspaceRoot}/CAScript-node-js-runtime",
-            "protocol": "inspector",
-            "internalConsoleOptions": "openOnSessionStart"
+            "type": "node-terminal"
         }
     ]
 }
