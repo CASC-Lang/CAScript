@@ -11,36 +11,48 @@ import {
 	UnaryOperatorType,
 } from "../binding/Binder";
 import { DiagnosticHandler } from "../diagnostic";
+import { BoundStatement, BoundExpressionStatement } from "../binding/Binder";
 
 export class Emitter {
 	public readonly diagnosticHandler: DiagnosticHandler;
-	public readonly root: BoundExpression;
+	public readonly root: BoundStatement;
 
 	constructor(source: string) {
 		const binder = new Binder(source);
 
+		this.root = binder.bind();
 		this.diagnosticHandler = binder.diagnosticHandler;
 	}
 
 	public emitJs(): string {
 		if (this.diagnosticHandler.diagnostics.length !== 0) return "";
-		else return JsEmitter.emit(this.root);
+		else return new JsEmitter().emit(this.root);
 	}
 }
 
 class JsEmitter {
-	public static emit(root: BoundExpression): string {
+	public emit(root: BoundStatement): string {
 		const builder = new Array<string>();
 
-		this.emitExpression(root, builder);
+		this.emitStatement(root, builder);
 
 		return builder.join(" ");
 	}
 
-	private static emitExpression(
-		expression: BoundExpression,
-		builder: string[]
-	) {
+	private emitStatement(statement: BoundStatement, builder: string[]) {
+		switch (statement.boundType()) {
+			case BoundType.VariableDeclaration:
+			case BoundType.ExpressionStatement:
+				this.emitExpression(
+					(statement as BoundExpressionStatement).expression,
+					builder
+				);
+				builder.push("\n");
+				break;
+		}
+	}
+
+	private emitExpression(expression: BoundExpression, builder: string[]) {
 		switch (expression.boundType()) {
 			case BoundType.Literal:
 				this.emitLiteralExpression(
@@ -78,14 +90,14 @@ class JsEmitter {
 		}
 	}
 
-	private static emitLiteralExpression(
+	private emitLiteralExpression(
 		expression: BoundLiteralExpression,
 		builder: string[]
 	) {
 		builder.push(expression.value);
 	}
 
-	private static emitUnaryExpression(
+	private emitUnaryExpression(
 		expression: BoundUnaryExpression,
 		builder: string[]
 	) {
@@ -109,7 +121,7 @@ class JsEmitter {
 		}
 	}
 
-	private static emitBinaryExpression(
+	private emitBinaryExpression(
 		expression: BoundBinaryExpression,
 		builder: string[]
 	) {
@@ -242,7 +254,7 @@ class JsEmitter {
 		}
 	}
 
-	private static emitTernaryExpression(
+	private emitTernaryExpression(
 		expression: BoundTernaryExpression,
 		builder: string[]
 	) {
