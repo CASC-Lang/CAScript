@@ -45,6 +45,17 @@ export class DiagnosticHandler {
 			`ERROR: Cannot apply operator '${operator}' on type '${type1}' and type '${type2}'`
 		);
 	}
+
+	public reportWrongType(
+		span: TextSpan,
+		providedType: Type,
+		expectedType: Type
+	) {
+		this.report(
+			span,
+			`ERROR: Expected type '${providedType}' but got type '${expectedType}'`
+		)
+	}
 }
 
 export class Diagnostic {

@@ -252,7 +252,23 @@ class Lexer {
 					if (!isNaN(+this.peek())) {
 						const start = this.pos;
 
-						while (this.peek() && !/\s/.test(this.peek()))
+						const isNumberCandidateChar = (
+							char: string
+						): boolean => {
+							return (
+								!isNaN(+char) ||
+								char === "e" ||
+								char === "x" ||
+								char === "b" ||
+								char === "o" ||
+								char === "."
+							);
+						};
+
+						while (
+							this.peek() &&
+							isNumberCandidateChar(this.peek())
+						)
 							this.pos++;
 
 						const numberLiteral = this.source.substring(
@@ -277,7 +293,16 @@ class Lexer {
 					} else {
 						const start = this.pos;
 
-						while (this.peek() && !/\s/.test(this.peek()))
+						const isIdentifierCandidateChar = (
+							char: string
+						): boolean => {
+							return (
+								/^[a-z0-9]+$/i.test(char) ||
+								/[^\u0000-\u00ff]/.test(char)
+							);
+						};
+
+						while (this.peek() && isIdentifierCandidateChar(this.peek()))
 							this.pos++;
 
 						const literal = this.source.substring(start, this.pos);
@@ -490,9 +515,9 @@ export class Parser {
 				precedence == 1
 					? new TernaryExpression(
 							left,
-							this.next(),
+							this.assert(TokenType.QuestionMark),
 							this.parseExpression(precedence),
-							this.next(),
+							this.assert(TokenType.Colon),
 							this.parseExpression(precedence)
 					  )
 					: new BinaryExpression(
@@ -529,7 +554,7 @@ export class Parser {
 	}
 }
 
-export const enum SyntaxType {
+export enum SyntaxType {
 	Token,
 	Identifier,
 	Literal,

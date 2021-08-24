@@ -201,7 +201,7 @@ export class BoundIdentifierExpression extends BoundExpression {
 	}
 
 	type(): Type {
-		return Type.Bool;
+		return Type.Undefined;
 	}
 }
 
