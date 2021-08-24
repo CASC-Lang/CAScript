@@ -51,9 +51,19 @@ class Lexer {
 					);
 					break;
 				case ":":
-					tokens.push(
-						new Token(TokenType.Colon, this.pos, this.next())
-					);
+					if (this.peek(1) === "=") {
+						tokens.push(
+							new Token(
+								TokenType.ColonEqual,
+								this.pos,
+								this.next(2)
+							)
+						);
+					} else {
+						tokens.push(
+							new Token(TokenType.Colon, this.pos, this.next())
+						);
+					}
 					break;
 				case "=":
 					if (this.peek(1) === "=") {
@@ -65,7 +75,9 @@ class Lexer {
 							)
 						);
 					} else {
-						this.pos++;
+						tokens.push(
+							new Token(TokenType.Equal, this.pos, this.next())
+						);
 					}
 					break;
 				case "!":
@@ -290,7 +302,10 @@ class Lexer {
 								numberLiteral
 							)
 						);
-					} else {
+					} else if (
+						/^[a-z0-9]+$/i.test(this.peek()) ||
+						/[^\u0000-\u00ff]/.test(this.peek())
+					) {
 						const start = this.pos;
 
 						const isIdentifierCandidateChar = (
@@ -302,7 +317,10 @@ class Lexer {
 							);
 						};
 
-						while (this.peek() && isIdentifierCandidateChar(this.peek()))
+						while (
+							this.peek() &&
+							isIdentifierCandidateChar(this.peek())
+						)
 							this.pos++;
 
 						const literal = this.source.substring(start, this.pos);
@@ -327,6 +345,11 @@ class Lexer {
 									)
 								);
 						}
+					} else {
+						this.diagnosticHandler.reportBadCharacterInput(
+							new TextSpan(this.pos, this.pos + 1),
+							this.next()
+						);
 					}
 			}
 		}
@@ -371,6 +394,8 @@ export enum TokenType {
 	CloseParenthesis,
 	QuestionMark,
 	Colon,
+	Equal,
+	ColonEqual,
 	DoubleEqual,
 	BangEqual,
 	DoubleGreaterThan,
@@ -491,39 +516,76 @@ export class Parser {
 		return new Token(TokenType.Bang, this.pos - 1, "");
 	}
 
-	public parse(): SyntaxNode {
-		return this.parseExpression();
+	public parse(): StatementSyntax {
+		return this.parseStatement();
 	}
 
-	public parseExpression(parentPrecedence = 0): ExpressionSyntax {
+	public parseStatement(): StatementSyntax {
+		if (
+			this.peek().tokenType === TokenType.Identifier &&
+			this.peek(1).tokenType === TokenType.ColonEqual
+		) {
+			const identifier = this.assert(TokenType.Identifier);
+			const operator = this.assert(TokenType.ColonEqual);
+
+			return new VariableDeclarationStatement(
+				identifier,
+				operator,
+				this.parseExpression()
+			);
+		} else {
+			return new ExpressionStatement(this.parseExpression());
+		}
+	}
+
+	public parseExpression(): ExpressionSyntax {
+		return this.parseAssignmentExpression();
+	}
+
+	public parseAssignmentExpression(): ExpressionSyntax {
+		if (
+			this.peek().tokenType === TokenType.Identifier &&
+			this.peek(1).tokenType === TokenType.Equal
+		) {
+			const left = this.assert(TokenType.Identifier);
+			const operator = this.assert(TokenType.Equal);
+			const expression = this.parseAssignmentExpression();
+
+			return new AssignmentExpression(left, operator, expression);
+		}
+
+		return this.parseBinaryExpression();
+	}
+
+	public parseBinaryExpression(parentPrecedence = 0): ExpressionSyntax {
 		let left: ExpressionSyntax;
 		let precedence = TokenType.unaryPrecedence(this.peek().tokenType);
 		left =
-			precedence != 0 || precedence > parentPrecedence
+			precedence !== 0 || precedence > parentPrecedence
 				? new UnaryExpression(
 						this.next(),
-						this.parseExpression(precedence)
+						this.parseBinaryExpression(precedence)
 				  )
 				: this.parsePrimaryExpression();
 
 		for (;;) {
 			precedence = TokenType.binaryPrecedence(this.peek().tokenType);
 
-			if (precedence == 0 || precedence <= parentPrecedence) break;
+			if (precedence === 0 || precedence <= parentPrecedence) break;
 
 			left =
-				precedence == 1
+				precedence === 1
 					? new TernaryExpression(
 							left,
 							this.assert(TokenType.QuestionMark),
-							this.parseExpression(precedence),
+							this.parseBinaryExpression(precedence),
 							this.assert(TokenType.Colon),
-							this.parseExpression(precedence)
+							this.parseBinaryExpression(precedence)
 					  )
 					: new BinaryExpression(
 							left,
 							this.next(),
-							this.parseExpression(precedence)
+							this.parseBinaryExpression(precedence)
 					  );
 		}
 
@@ -535,7 +597,7 @@ export class Parser {
 			case TokenType.OpenParenthesis:
 				return new ParenthesizedExpression(
 					this.assert(TokenType.OpenParenthesis),
-					this.parseExpression(),
+					this.parseBinaryExpression(),
 					this.assert(TokenType.CloseParenthesis)
 				);
 			case TokenType.NumberLiteral: {
@@ -546,10 +608,18 @@ export class Parser {
 				const token = this.assert(TokenType.BoolLiteral);
 				return new LiteralExpression(token, JSON.parse(token.literal));
 			}
-			default:
+			case TokenType.Identifier:
 				return new IdentifierExpression(
 					this.assert(TokenType.Identifier)
 				);
+			default: {
+				const unexpectedToken = this.next();
+				this.diagnosticHandler.reportUnexpectedToken(
+					unexpectedToken.span,
+					unexpectedToken.tokenType
+				);
+				return unexpectedToken;
+			}
 		}
 	}
 }
@@ -558,10 +628,13 @@ export enum SyntaxType {
 	Token,
 	Identifier,
 	Literal,
+	Assignment,
 	Parenthesized,
 	Unary,
 	Binary,
 	Ternary,
+	VariableDeclaration,
+	StatementExpression,
 }
 
 export abstract class ExpressionSyntax extends SyntaxNode {}
@@ -601,6 +674,32 @@ export class LiteralExpression extends ExpressionSyntax {
 
 	children(): SyntaxNode[] {
 		return [this.token];
+	}
+}
+
+export class AssignmentExpression extends ExpressionSyntax {
+	public readonly identifier: Token;
+	public readonly operator: Token;
+	public readonly expression: ExpressionSyntax;
+
+	constructor(
+		identifier: Token,
+		operator: Token,
+		expression: ExpressionSyntax
+	) {
+		super();
+
+		this.identifier = identifier;
+		this.operator = operator;
+		this.expression = expression;
+	}
+
+	type(): SyntaxType {
+		return SyntaxType.Assignment;
+	}
+
+	children(): SyntaxNode[] {
+		return [this.identifier, this.operator, this.expression];
 	}
 }
 
@@ -715,5 +814,51 @@ export class TernaryExpression extends ExpressionSyntax {
 			this.rightOperator,
 			this.right,
 		];
+	}
+}
+
+export abstract class StatementSyntax extends SyntaxNode {}
+
+export class VariableDeclarationStatement extends StatementSyntax {
+	public readonly identifier: Token;
+	public readonly operator: Token;
+	public readonly expression: ExpressionSyntax;
+
+	constructor(
+		identifier: Token,
+		operator: Token,
+		expression: ExpressionSyntax
+	) {
+		super();
+
+		this.identifier = identifier;
+		this.operator = operator;
+		this.expression = expression;
+	}
+
+	public type(): SyntaxType {
+		return SyntaxType.VariableDeclaration;
+	}
+
+	public children(): SyntaxNode[] {
+		return [this.identifier, this.operator, this.expression];
+	}
+}
+
+export class ExpressionStatement extends StatementSyntax {
+	public readonly expression: ExpressionSyntax;
+
+	constructor(expression: ExpressionSyntax) {
+		super();
+
+		this.expression = expression;
+	}
+
+	public type(): SyntaxType {
+		return SyntaxType.StatementExpression;
+	}
+
+	public children(): SyntaxNode[] {
+		return [this.expression];
 	}
 }

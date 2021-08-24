@@ -19,7 +19,6 @@ export class Emitter {
 	constructor(source: string) {
 		const binder = new Binder(source);
 
-		this.root = binder.bind();
 		this.diagnosticHandler = binder.diagnosticHandler;
 	}
 
@@ -120,7 +119,7 @@ class JsEmitter {
 				builder.push("+");
 				this.emitExpression(expression.right, builder);
 				break;
-			case BinaryOperatorType.Minus:
+			case BinaryOperatorType.Subtraction:
 				this.emitExpression(expression.left, builder);
 				builder.push("-");
 				this.emitExpression(expression.right, builder);

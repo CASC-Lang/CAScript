@@ -2,6 +2,8 @@ import { bgGreenBright, bgRedBright, black } from "chalk";
 import { createInterface } from "readline";
 import { Emitter } from "./emit/Emitter";
 import { Parser, SyntaxNode, SyntaxType, Token } from "./syntax/Parser";
+import { Evaluator } from "./runtime/runtime";
+import { Binder } from "./binding/Binder";
 
 const command = process.argv[2];
 
@@ -33,11 +35,11 @@ switch (command) {
 			input: process.stdin,
 			output: process.stdout,
 			terminal: false,
-		});
+		}), evaluator = new Evaluator();
 		let input: string,
 			showSyntaxTree: boolean = false;
 
-		const proc = () =>
+		const repl = () =>
 			readline.question("> ", (data) => {
 				input = data;
 
@@ -48,10 +50,10 @@ switch (command) {
 					showSyntaxTree = !showSyntaxTree;
 				} else {
 					const tree = new Parser(input);
-					const emitter = new Emitter(input);
+					const result = evaluator.evaluate(input);
 
-					if (emitter.diagnosticHandler.diagnostics.length !== 0) {
-						emitter.diagnosticHandler.diagnostics.forEach((d) => {
+					if (result.diagnosticHolder.diagnostics.length !== 0) {
+						result.diagnosticHolder.diagnostics.forEach((d) => {
 							console.error(bgRedBright(black(d.toString())));
 
 							const prefix = input.substring(0, d.span.start),
@@ -77,10 +79,8 @@ switch (command) {
 							console.log();
 						});
 					} else {
-						const result = emitter.emitJs();
-
 						console.log(
-							bgGreenBright(black(eval(result).toString()))
+							bgGreenBright(black(result.resultValue))
 						);
 
 						if (showSyntaxTree) {
@@ -89,10 +89,10 @@ switch (command) {
 					}
 				}
 
-				proc();
+				repl();
 			});
 
-		proc();
+		repl();
 		break;
 	}
 }

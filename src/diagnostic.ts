@@ -8,6 +8,10 @@ export class DiagnosticHandler {
 		this.diagnostics.push(new Diagnostic(span, message));
 	}
 
+	public reportBadCharacterInput(span: TextSpan, char: string) {
+		this.report(span, `ERROR: Bad character input '${char}'`);
+	}
+
 	public reportInvalidNumberFormat(span: TextSpan, numberLiteral: string) {
 		this.report(span, `ERROR: Invalid number format: '${numberLiteral}'`);
 	}
@@ -15,11 +19,11 @@ export class DiagnosticHandler {
 	public reportUnexpectedToken(
 		span: TextSpan,
 		providedToken: TokenType,
-		expectedToken: TokenType
+		expectedToken?: TokenType
 	) {
 		this.report(
 			span,
-			`ERROR: Unexpected token '${TokenType[providedToken]}', expected token '${TokenType[expectedToken]}'`
+			`ERROR: Unexpected token '${TokenType[providedToken]}'${expectedToken ? `, expected token '${TokenType[expectedToken]}'` : ""}`
 		);
 	}
 
@@ -54,7 +58,7 @@ export class DiagnosticHandler {
 		this.report(
 			span,
 			`ERROR: Expected type '${providedType}' but got type '${expectedType}'`
-		)
+		);
 	}
 }
 
